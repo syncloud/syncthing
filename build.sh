@@ -22,7 +22,7 @@ wget https://github.com/syncthing/syncthing/releases/download/v${SYNCTHING_VERSI
 tar xf syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION}.tar.gz
 mv syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing
 
-${BUILD_DIR}/syncthing/syncthing --help
+${BUILD_DIR}/syncthing/syncthing --help || true
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
