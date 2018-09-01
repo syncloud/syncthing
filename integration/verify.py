@@ -26,27 +26,27 @@ TMP_DIR = '/tmp/syncloud'
 
 
 @pytest.fixture(scope="session")
-def platform_data_dir(installer):
-    return get_platform_data_dir(installer)
+def platform_data_dir():
+    return get_platform_data_dir('snapd')
         
 @pytest.fixture(scope="session")
-def data_dir(installer):
-    return get_data_dir(installer, APP)
+def data_dir():
+    return get_data_dir('snapd', APP)
          
 
 @pytest.fixture(scope="session")
-def app_dir(installer):
-    return get_app_dir(installer, APP)
+def app_dir():
+    return get_app_dir('snapd', APP)
 
 
 @pytest.fixture(scope="session")
-def service_prefix(installer):
-    return get_service_prefix(installer)
+def service_prefix():
+    return get_service_prefix('snapd')
 
 
 @pytest.fixture(scope="session")
-def ssh_env_vars(installer):
-    return get_ssh_env_vars(installer, APP)
+def ssh_env_vars():
+    return get_ssh_env_vars('snapd', APP)
 
 
 @pytest.fixture(scope="session")
@@ -120,8 +120,8 @@ def test_activate_device(auth, device_host):
     LOGS_SSH_PASSWORD = DEVICE_PASSWORD
 
 
-def test_install(app_archive_path, device_host, installer):
-    local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
+def test_install(app_archive_path, device_host):
+    local_install(device_host, DEVICE_PASSWORD, app_archive_path, 'snapd')
 
 
 def test_resource(syncthing_session_domain, user_domain, device_host):
@@ -137,5 +137,5 @@ def test_remove(syncloud_session, device_host):
     wait_for_sam(syncloud_session, device_host)
 
 
-def test_reinstall(app_archive_path, device_host, installer):
-    local_install(device_host, DEVICE_PASSWORD, app_archive_path, installer)
+def test_reinstall(app_archive_path, device_host):
+    local_install(device_host, DEVICE_PASSWORD, app_archive_path, 'snapd')
