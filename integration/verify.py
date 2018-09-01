@@ -13,7 +13,6 @@ from syncloudlib.integration.ssh import run_scp, run_ssh
 from syncloudlib.integration.installer import local_install, wait_for_sam, wait_for_rest, local_remove, get_platform_data_dir, get_data_dir, get_app_dir, get_service_prefix, get_ssh_env_vars
 
 import requests
-from bs4 import BeautifulSoup
 
 SYNCLOUD_INFO = 'syncloud.info'
 DEVICE_USER = 'user'
@@ -101,12 +100,6 @@ def syncthing_session_domain(user_domain, device_host):
     response = session.get('https://{0}/index.php/login'.format(device_host), headers={"Host": user_domain}, allow_redirects=False, verify=False)
     print(response.text.encode("UTF-8"))
     print(response.headers)
-    soup = BeautifulSoup(response.text, "html.parser")
-    requesttoken = soup.find_all('input', {'name': 'requesttoken'})[0]['value']
-    response = session.post('https://{0}/index.php/login'.format(device_host),
-                            headers={"Host": user_domain},
-                            data={'user': DEVICE_USER, 'password': DEVICE_PASSWORD, 'requesttoken': requesttoken},
-                            allow_redirects=False, verify=False)
     assert response.status_code == 303, response.text
     return session, requesttoken
 
