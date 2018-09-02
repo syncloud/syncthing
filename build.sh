@@ -28,9 +28,9 @@ DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 
 coin --to ${BUILD_DIR}/lib py https://pypi.python.org/packages/3c/3a/ce5fe9623d93d442d9fc8b0fbf5ccb16298826782f4e5c6d85a007a5d5de/syncloud-lib-39.tar.gz#md5=6f276666c88bc63d856b82da07f7c846
 
-#cp -r ${DIR}/bin ${BUILD_DIR}
-#cp -r ${DIR}/hooks ${BUILD_DIR}
-#cp -r ${DIR}/config ${BUILD_DIR}/config.templates
+cp -r ${DIR}/bin ${BUILD_DIR}
+cp -r ${DIR}/hooks ${BUILD_DIR}
+cp -r ${DIR}/config ${BUILD_DIR}/config.templates
 
 mkdir ${BUILD_DIR}/META
 echo ${NAME} >> ${BUILD_DIR}/META/app
