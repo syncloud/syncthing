@@ -1,19 +1,17 @@
 apps:
   syncthing:
-    user: nextcloud
     command: bin/service.syncthing.sh start
-    daemon: forking
+    daemon: simple
     plugs:
     - network
     - network-bind
     restart-condition: always
-    post-start-command: bin/service.syncthing.sh post-start
     before: [nginx]
   
   nginx:
     command: bin/service.nginx.sh start
     user: nextcloud
-    daemon: simple
+    daemon: forking
     plugs:
     - network
     - network-bind
