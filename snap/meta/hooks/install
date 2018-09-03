@@ -3,5 +3,5 @@
 import os, sys
 sys.path.append(os.path.join(os.environ['SNAP'], 'hooks'))
 
-from nextcloud_hooks import SyncthingInstaller
+from syncthing_hooks import SyncthingInstaller
 SyncthingInstaller().install()
