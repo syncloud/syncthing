@@ -10,7 +10,7 @@ apps:
   
   nginx:
     command: bin/service.nginx.sh start
-    user: nextcloud
+    user: syncthing
     daemon: forking
     plugs:
     - network
