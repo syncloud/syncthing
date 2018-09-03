@@ -92,13 +92,13 @@ def syncloud_session(device_host):
 
 
 @pytest.fixture(scope='function')
-def syncthing_session_domain(user_domain, device_host):
+def syncthing_session(user_domain, device_host):
     session = requests.session()
-    response = session.get('https://{0}/index.php/login'.format(device_host), headers={"Host": user_domain}, allow_redirects=False, verify=False)
+    response = session.get('https://{0}'.format(device_host), headers={"Host": user_domain}, allow_redirects=False, verify=False)
     print(response.text.encode("UTF-8"))
     print(response.headers)
-    assert response.status_code == 303, response.text
-    return session, requesttoken
+    assert response.status_code == 200, response.text
+    return session
 
 
 def test_start(module_setup):
@@ -121,9 +121,8 @@ def test_install(app_archive_path, device_host):
     local_install(device_host, DEVICE_PASSWORD, app_archive_path, 'snapd')
 
 
-def test_resource(syncthing_session_domain, user_domain, device_host):
-    session, _ = syncthing_session_domain
-    response = session.get('https://{0}/core/img/loading.gif'.format(device_host), headers={"Host": user_domain}, verify=False)
+def test_resource(syncthing_session, user_domain, device_host):
+    response = syncthing_session.get('https://{0}'.format(device_host), headers={"Host": user_domain}, verify=False)
     assert response.status_code == 200, response.text
 
 
