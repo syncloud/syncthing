@@ -17,7 +17,7 @@ from syncloudlib.application import paths, urls, storage, users
 
 
 APP_NAME = 'syncthing'
-
+USER_NAME = APP_NAME
 
 class SyncthingInstaller:
     def __init__(self):
