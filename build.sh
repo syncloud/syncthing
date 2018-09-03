@@ -18,6 +18,9 @@ BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p ${BUILD_DIR}
 mkdir ${BUILD_DIR}/lib
 
+DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
+coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
+
 wget https://github.com/syncthing/syncthing/releases/download/v${SYNCTHING_VERSION}/syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION}.tar.gz
 tar xf syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION}.tar.gz
 mv syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing
