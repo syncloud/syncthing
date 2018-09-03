@@ -9,7 +9,7 @@ fi
 
 case $1 in
 start)
-    exec ${DIR}/syncthing/syncthing
+    exec ${DIR}/syncthing/syncthing -home ${SNAP_COMMON}/config/syncthing
     ;;
 *)
     echo "not valid command"

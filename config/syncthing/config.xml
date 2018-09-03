@@ -1,0 +1,59 @@
+<configuration version="26">
+    <folder id="zj2AA-q55a7" label="Default Folder" path="/data/syncthing" type="sendreceive" rescanIntervalS="60" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+        <device id="3LT2GA5-CQI4XJM-WTZ264P-MLOGMHL-MCRLDNT-MZV4RD3-KA745CL-OGAERQZ"></device>
+        <filesystemType>basic</filesystemType>
+        <minDiskFree unit="%">1</minDiskFree>
+        <versioning></versioning>
+        <copiers>0</copiers>
+        <pullers>0</pullers>
+        <hashers>0</hashers>
+        <order>random</order>
+        <ignoreDelete>false</ignoreDelete>
+        <scanProgressIntervalS>0</scanProgressIntervalS>
+        <pullerPauseS>0</pullerPauseS>
+        <maxConflicts>-1</maxConflicts>
+        <disableSparseFiles>false</disableSparseFiles>
+        <disableTempIndexes>false</disableTempIndexes> <paused>false</paused> <weakHashThresholdPct>25</weakHashThresholdPct> <markerName>.stfolder</markerName>
+    </folder>
+    <device id="3LT2GA5-CQI4XJM-WTZ264P-MLOGMHL-MCRLDNT-MZV4RD3-KA745CL-OGAERQZ" name="syno" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy=""> <address>dynamic</address> <paused>false</paused> </device>
+    <gui enabled="true" tls="false" debugging="false">
+        <address>127.0.0.1:1085</address>
+        <apikey>k1dnz1Dd0rzTBjjFFh7CXPnrF12C49B1</apikey>
+        <theme>default</theme>
+    </gui>
+    <options>
+        <listenAddress>default</listenAddress>
+        <globalAnnounceServer>default</globalAnnounceServer> <globalAnnounceEnabled>true</globalAnnounceEnabled>
+        <localAnnounceEnabled>true</localAnnounceEnabled> <localAnnouncePort>21027</localAnnouncePort>
+        <localAnnounceMCAddr>[ff12::8384]:21027</localAnnounceMCAddr>
+        <maxSendKbps>0</maxSendKbps> <maxRecvKbps>0</maxRecvKbps> <reconnectionIntervalS>60</reconnectionIntervalS>
+        <relaysEnabled>true</relaysEnabled> <relayReconnectIntervalM>10</relayReconnectIntervalM> <startBrowser>true</startBrowser>
+        <natEnabled>true</natEnabled> <natLeaseMinutes>60</natLeaseMinutes> <natRenewalMinutes>30</natRenewalMinutes>
+        <natTimeoutSeconds>10</natTimeoutSeconds>
+        <urAccepted>0</urAccepted> <urSeen>0</urSeen> <urUniqueID>LFWe2vn3</urUniqueID>
+        <urURL>https://data.syncthing.net/newdata</urURL> <urPostInsecurely>false</urPostInsecurely>
+        <urInitialDelayS>1800</urInitialDelayS>
+        <restartOnWakeup>true</restartOnWakeup>
+        <autoUpgradeIntervalH>12</autoUpgradeIntervalH>
+        <upgradeToPreReleases>false</upgradeToPreReleases> <keepTemporariesH>24</keepTemporariesH>
+    <cacheIgnoredFiles>false</cacheIgnoredFiles>
+    <progressUpdateIntervalS>5</progressUpdateIntervalS>
+    <limitBandwidthInLan>false</limitBandwidthInLan>
+    <minHomeDiskFree unit="%">1</minHomeDiskFree>
+    <releasesURL>https://upgrades.syncthing.net/meta.json</releasesURL>
+    <overwriteRemoteDeviceNamesOnConnect>false</overwriteRemoteDeviceNamesOnConnect>
+    <tempIndexMinBlocks>10</tempIndexMinBlocks>
+    <trafficClass>0</trafficClass>
+    <weakHashSelectionMethod>auto</weakHashSelectionMethod>
+    <stunServer>default</stunServer>
+    <stunKeepaliveSeconds>24</stunKeepaliveSeconds>
+    <kcpNoDelay>false</kcpNoDelay>
+    <kcpUpdateIntervalMs>25</kcpUpdateIntervalMs>
+    <kcpFastResend>false</kcpFastResend>
+    <kcpCongestionControl>true</kcpCongestionControl>
+    <kcpSendWindowSize>128</kcpSendWindowSize>
+    <kcpReceiveWindowSize>128</kcpReceiveWindowSize>
+    <defaultFolderPath>~</defaultFolderPath>
+    <minHomeDiskFreePct>0</minHomeDiskFreePct>
+    <setLowPriority>true</setLowPriority> </options>
+</configuration>
