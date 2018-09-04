@@ -55,46 +55,6 @@ def test_login(driver, user_domain):
     print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
 
 
-def test_main(driver, user_domain):
-
-    user = driver.find_element_by_id("user")
-    user.send_keys(DEVICE_USER)
-    password = driver.find_element_by_id("password")
-    password.send_keys(DEVICE_PASSWORD)
-    screenshots(driver, screenshot_dir, 'login')
-    # print(driver.page_source.encode('utf-8'))
-
-    password.send_keys(Keys.RETURN)
-    screenshots(driver, screenshot_dir, 'login_progress')
-       
-    wait_driver = WebDriverWait(driver, 120)
-
-    wait_driver.until(EC.element_to_be_clickable((By.ID, 'closeWizard')))
-    wizard_close_button = driver.find_element_by_id("closeWizard")
-    wizard_close_button.click()
-
-    time.sleep(2)
-    screenshots(driver, screenshot_dir, 'main')
-
-
-def test_settings(driver, user_domain):
-    driver.get("https://{0}/index.php/settings/admin".format(user_domain))
-    time.sleep(10)
-    screenshots(driver, screenshot_dir, 'admin')
-
-
-def test_settings_user(driver, user_domain):
-    driver.get("https://{0}/index.php/settings/user".format(user_domain))
-    time.sleep(10)
-    screenshots(driver, screenshot_dir, 'user')
-
-
-def test_settings_user(driver, user_domain):
-    driver.get("https://{0}/index.php/settings/admin/ldap".format(user_domain))
-    time.sleep(10)
-    screenshots(driver, screenshot_dir, 'admin-ldap')
-
-
 def screenshots(driver, dir, name):
     desktop_w = 1024
     desktop_h = 768
