@@ -17,7 +17,7 @@
     </folder>
     <device id="3LT2GA5-CQI4XJM-WTZ264P-MLOGMHL-MCRLDNT-MZV4RD3-KA745CL-OGAERQZ" name="syno" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy=""> <address>dynamic</address> <paused>false</paused> </device>
     <gui enabled="true" tls="false" debugging="false">
-        <address>127.0.0.1:{{ syncthing_port }}</address>
+        <address>http://127.0.0.1:{{ syncthing_port }}</address>
         <apikey>k1dnz1Dd0rzTBjjFFh7CXPnrF12C49B1</apikey>
         <theme>default</theme>
     </gui>
