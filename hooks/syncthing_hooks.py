@@ -18,6 +18,7 @@ from syncloudlib.application import paths, urls, storage, users
 
 APP_NAME = 'syncthing'
 USER_NAME = APP_NAME
+SYNCTHING_PORT = 1085
 
 class SyncthingInstaller:
     def __init__(self):
@@ -44,7 +45,8 @@ class SyncthingInstaller:
     
         variables = {
             'app_dir': self.app_dir,
-            'app_data_dir': self.app_data_dir
+            'app_data_dir': self.app_data_dir,
+            'syncthing_port': SYNCTHING_PORT
         }
         gen.generate_files(templates_path, config_path, variables)
 
