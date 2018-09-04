@@ -123,8 +123,8 @@ def test_install(app_archive_path, device_host):
     local_install(device_host, DEVICE_PASSWORD, app_archive_path, 'snapd')
 
 
-def test_resource(syncthing_session, user_domain, device_host):
-    response = syncthing_session.get('https://{0}'.format(device_host), headers={"Host": user_domain}, verify=False)
+def test_resource(syncthing_session, user_domain):
+    response = syncthing_session.get('https://{0}'.format(user_domain), verify=False)
     assert response.status_code == 200, response.text
 
 
