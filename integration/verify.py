@@ -96,10 +96,10 @@ def syncloud_session(device_host):
 @pytest.fixture(scope='function')
 def syncthing_session(user_domain):
     session = requests.session()
-    response = session.get('https://{0}'.format(user_domain), allow_redirects=False, verify=False)
+    response = session.get('https://{0}:{1}@{2}'.format(DEVICE_USER, DEVICE_PASSWPRD, user_domain), allow_redirects=False, verify=False)
     print(response.text.encode("UTF-8"))
     print(response.headers)
-    #assert response.status_code == 200, response.text
+    assert response.status_code == 200, response.text
     return session
 
 
@@ -123,9 +123,17 @@ def test_install(app_archive_path, device_host):
     local_install(device_host, DEVICE_PASSWORD, app_archive_path, 'snapd')
 
 
+def test_wrong_auth(user_domain):
+    session = requests.session()
+    response = session.get('https://{0}:passwrong@{2}'.format(DEVICE_USER, user_domain), allow_redirects=False, verify=False)
+    print(response.text.encode("UTF-8"))
+    print(response.headers)
+    assert response.status_code != 200, response.text
+
+
 def test_resource(syncthing_session, user_domain):
     response = syncthing_session.get('https://{0}'.format(user_domain), verify=False)
-    #assert response.status_code == 200, response.text
+    assert response.status_code == 200, response.text
 
 
 def test_remove(syncloud_session, device_host):
