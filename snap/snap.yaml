@@ -6,6 +6,7 @@ apps:
     - network
     - network-bind
     restart-condition: always
+    start-timeout: 600s
     before: [nginx]
   
   nginx:
