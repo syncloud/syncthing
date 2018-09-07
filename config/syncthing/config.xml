@@ -30,7 +30,7 @@
         <theme>default</theme>
         <user>user</user>
         <password>$2y$10$aRT2OJmocI8llydZR3GxzehRWC9vidfQLKxyXO8j/guQySkkYSCh6</password>
-        <authMode>simple</authMode>
+        <authMode>ldap</authMode>
         <ldapServer>localhost</ldapServer>
         <ldapPort>389</ldapPort>
         <ldapBindDn>cn=%s,ou=users,dc=syncloud,dc=org</ldapBindDn>
