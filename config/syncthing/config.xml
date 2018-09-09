@@ -31,9 +31,9 @@
         <user>user</user>
         <password>$2y$10$aRT2OJmocI8llydZR3GxzehRWC9vidfQLKxyXO8j/guQySkkYSCh6</password>
         <authMode>ldap</authMode>
-        <ldapServer>localhost</ldapServer>
-        <ldapPort>389</ldapPort>
-        <ldapBindDn>cn=%s,ou=users,dc=syncloud,dc=org</ldapBindDn>
+        <LDAPServer>localhost</LDAPServer>
+        <LDAPPort>389</LDAPPort>
+        <LDAPBindDn>cn=%s,ou=users,dc=syncloud,dc=org</LDAPBindDn>
     </gui>
     <options>
         <listenAddress>default</listenAddress>
