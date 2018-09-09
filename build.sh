@@ -11,7 +11,7 @@ NAME=syncthing
 CPU_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH_CPU)
 ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
 #SYNCTHING_VERSION=v0.14.49
-SYNCTHING_VERSION=v1.0.41
+SYNCTHING_VERSION=v1.0.43
 VERSION=$1
 
 rm -rf ${DIR}/build
