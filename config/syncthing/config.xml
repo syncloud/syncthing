@@ -30,8 +30,8 @@
         <theme>default</theme>
         <authMode>ldap</authMode>
         <ldapAuth>
-            <ldapAddress>localhost:389</ldapAddress>
-            <ldapBindDn>cn=%s,ou=users,dc=syncloud,dc=org</ldapBindDn>
+            <address>localhost:389</address>
+            <bindDn>cn=%s,ou=users,dc=syncloud,dc=org</bindDn>
         </ldapAuth>
     </gui>
     <options>
