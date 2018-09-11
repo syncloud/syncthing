@@ -30,10 +30,10 @@
         <theme>default</theme>
         <authMode>ldap</authMode>
     </gui>
-     <ldapConfiguration>
+    <ldap>
         <address>localhost:389</address>
         <bindDn>cn=%s,ou=users,dc=syncloud,dc=org</bindDn>
-    </ldapConfiguration>
+    </ldap>
     <options>
         <listenAddress>default</listenAddress>
         <globalAnnounceServer>default</globalAnnounceServer>
