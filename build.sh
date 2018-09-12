@@ -10,7 +10,7 @@ export TMP=/tmp
 NAME=syncthing
 CPU_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH_CPU)
 ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
-SYNCTHING_VERSION=v0.14.51-rc.1
+SYNCTHING_VERSION=v0.14.51-rc.2
 #SYNCTHING_VERSION=v1.0.71
 VERSION=$1
 
