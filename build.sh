@@ -18,7 +18,6 @@ BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p ${BUILD_DIR}
 mkdir ${BUILD_DIR}/lib
 
-cd ${BUILD_DIR}
 GO_ARCH=$CPU_ARCH
 if [ $(uname -m) == "armv7l" ]; then
     GO_ARCH=armv6l
@@ -40,11 +39,6 @@ export GOPATH=$(pwd)/syncthing-src
 cd syncthing-src/src/github.com/syncthing/syncthing
 ./build.sh assets
 go build -o ${BUILD_DIR}/syncthing github.com/syncthing/syncthing/cmd/syncthing
-#go run build.go -version v${SYNCTHING_VERSION}
-#ls -la
-#ls -la cmd/syncthing
-#ls -la $GOROOT/bin
-#mv cmd/syncthing/syncthing ${BUILD_DIR}/syncthing
 
 ${BUILD_DIR}/syncthing/syncthing --help || true
 
