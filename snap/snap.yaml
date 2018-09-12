@@ -17,6 +17,7 @@ apps:
     - network
     - network-bind
     restart-condition: always
+    start-timeout: 600s
     pre-start-command: bin/service.nginx.sh pre-start
     stop-command: bin/service.nginx.sh stop
     post-start-command: bin/service.nginx.sh post-start
