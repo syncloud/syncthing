@@ -40,6 +40,8 @@ cd syncthing-src/src/github.com/syncthing/syncthing
 ./build.sh assets
 go build -o ${BUILD_DIR}/syncthing github.com/syncthing/syncthing/cmd/syncthing
 
+cd $DIR
+
 ${BUILD_DIR}/syncthing/syncthing --help || true
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
