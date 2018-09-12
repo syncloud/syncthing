@@ -22,8 +22,8 @@ cd ${BUILD_DIR}
 GO_ARCH=$CPU_ARCH
 if [ $(uname -m) == "armv7l" ]; then
     GO_ARCH=armv6l
-else
-    
+fi
+
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-$(uname -m).tar.gz
 
