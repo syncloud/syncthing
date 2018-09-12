@@ -19,7 +19,11 @@ mkdir -p ${BUILD_DIR}
 mkdir ${BUILD_DIR}/lib
 
 cd ${BUILD_DIR}
-
+GO_ARCH=$CPU_ARCH
+if [ $(uname -m) == "armv7l" ]; then
+    GO_ARCH=armv6l
+else
+    
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-$(uname -m).tar.gz
 
@@ -28,8 +32,8 @@ tar xf v${SYNCTHING_VERSION}.tar.gz
 mkdir -p syncthing-src/src/github.com/syncthing
 mv syncthing-${SYNCTHING_VERSION} syncthing-src/src/github.com/syncthing/syncthing
 GO_VERSION=1.10.4
-wget https://dl.google.com/go/go$GO_VERSION.linux-${go_arch}.tar.gz --progress=dot:giga
-tar xf go$GO_VERSION.linux-${go_arch}.tar.gz
+wget https://dl.google.com/go/go$GO_VERSION.linux-$GO_ARCH.tar.gz --progress=dot:giga
+tar xf go$GO_VERSION.linux-$GO_ARCH.tar.gz
 export GOROOT=$(pwd)/go
 export PATH=$PATH:$GOROOT/bin
 export GOPATH=$(pwd)/syncthing-src
