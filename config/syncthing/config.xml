@@ -32,7 +32,7 @@
     </gui>
     <ldap>
         <address>localhost:389</address>
-        <bindDn>cn=%s,ou=users,dc=syncloud,dc=org</bindDn>
+        <bindDN>cn=%s,ou=users,dc=syncloud,dc=org</bindDN>
     </ldap>
     <options>
         <listenAddress>default</listenAddress>
