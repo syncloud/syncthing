@@ -10,8 +10,8 @@ export TMP=/tmp
 NAME=syncthing
 CPU_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH_CPU)
 ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
-#SYNCTHING_VERSION=v0.14.49
-SYNCTHING_VERSION=v1.0.78
+SYNCTHING_VERSION=v0.14.51-rc.1
+#SYNCTHING_VERSION=v1.0.71
 VERSION=$1
 
 rm -rf ${DIR}/build
@@ -22,8 +22,8 @@ mkdir ${BUILD_DIR}/lib
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-$(uname -m).tar.gz
 
-#wget https://github.com/syncthing/syncthing/releases/download/${SYNCTHING_VERSION}/syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION}.tar.gz
-wget http://artifact.syncloud.org/syncthing-main/syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION}.tar.gz
+wget https://github.com/syncthing/syncthing/releases/download/${SYNCTHING_VERSION}/syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION}.tar.gz
+#wget http://artifact.syncloud.org/syncthing-main/syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION}.tar.gz
 tar xf syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION}.tar.gz
 mv syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing
 
