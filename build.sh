@@ -3,14 +3,13 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd ${DIR}
 
-
 export TMPDIR=/tmp
 export TMP=/tmp
 
 NAME=syncthing
 CPU_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH_CPU)
 ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
-SYNCTHING_VERSION=v0.14.51-rc.2
+SYNCTHING_VERSION=0.14.51-rc.2
 #SYNCTHING_VERSION=v1.0.71
 VERSION=$1
 
@@ -19,12 +18,25 @@ BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p ${BUILD_DIR}
 mkdir ${BUILD_DIR}/lib
 
+cd ${BUILD_DIR}
+
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-$(uname -m).tar.gz
 
-wget https://github.com/syncthing/syncthing/releases/download/${SYNCTHING_VERSION}/syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION}.tar.gz
-#wget http://artifact.syncloud.org/syncthing-main/syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION}.tar.gz
-tar xf syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION}.tar.gz
+wget https://github.com/syncthing/syncthing/archive/v${SYNCTHING_VERSION}.tar.gz
+tar xf v${SYNCTHING_VERSION}.tar.gz
+mkdir -p syncthing-src/src/github.com/syncthing
+mv syncthing-${SYNCTHING_VERSION} syncthing-src/src/github.com/syncthing/syncthing
+GO_VERSION=1.10.4
+wget https://dl.google.com/go/go$GO_VERSION.linux-${go_arch}.tar.gz --progress=dot:giga
+tar xf go$GO_VERSION.linux-${go_arch}.tar.gz
+export GOROOT=$(pwd)/go
+export PATH=$PATH:$GOROOT/bin
+export GOPATH=$(pwd)/syncthing-src
+cd syncthing-src/src/github.com/syncthing/syncthing
+./build.sh assets
+go run build.go -version v${SYNCTHING_VERSION}
+
 mv syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing
 
 ${BUILD_DIR}/syncthing/syncthing --help || true
