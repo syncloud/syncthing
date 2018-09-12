@@ -38,7 +38,7 @@ export GOROOT=$(pwd)/go
 export PATH=$PATH:$GOROOT/bin
 export GOPATH=$(pwd)/syncthing-src
 cd syncthing-src/src/github.com/syncthing/syncthing
-#./build.sh assets
+./build.sh assets
 go build -o ${BUILD_DIR}/syncthing github.com/syncthing/syncthing/cmd/syncthing
 #go run build.go -version v${SYNCTHING_VERSION}
 #ls -la
