@@ -41,7 +41,7 @@ cd syncthing-src/src/github.com/syncthing/syncthing
 ./build.sh assets
 go run build.go -version v${SYNCTHING_VERSION}
 
-mv syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing
+mv syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing
 
 ${BUILD_DIR}/syncthing/syncthing --help || true
 
