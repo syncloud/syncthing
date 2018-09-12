@@ -41,7 +41,7 @@ cd syncthing-src/src/github.com/syncthing/syncthing
 ./build.sh assets
 go run build.go -version v${SYNCTHING_VERSION}
 ls -la
-la -la cmd/syncthing
+ls -la cmd/syncthing
 ls -la $GOROOT/bin
 mv cmd/syncthing/syncthing ${BUILD_DIR}/syncthing
 
