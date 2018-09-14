@@ -39,7 +39,7 @@ export GOPATH=$(pwd)/syncthing-src
 cd syncthing-src/src/github.com/syncthing/syncthing
 ./build.sh assets
 go run build.go -version v${SYNCTHING_VERSION} tar
-tar xf syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION}.tar.gz 
+tar xf syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION}.tar.gz 
 mv syncthing-linux-${CPU_ARCH}-${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing 
 
 cd $DIR
