@@ -1,7 +1,6 @@
 <configuration version="26">
     <folder id="zj2AA-q55a7" label="Default Folder" path="/data/syncthing" type="sendreceive" rescanIntervalS="60"
             fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
-        <device id="3LT2GA5-CQI4XJM-WTZ264P-MLOGMHL-MCRLDNT-MZV4RD3-KA745CL-OGAERQZ"></device>
         <filesystemType>basic</filesystemType>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning></versioning>
@@ -19,11 +18,6 @@
         <weakHashThresholdPct>25</weakHashThresholdPct>
         <markerName>.stfolder</markerName>
     </folder>
-    <device id="3LT2GA5-CQI4XJM-WTZ264P-MLOGMHL-MCRLDNT-MZV4RD3-KA745CL-OGAERQZ" name="syno" compression="metadata"
-            introducer="false" skipIntroductionRemovals="false" introducedBy="">
-        <address>dynamic</address>
-        <paused>false</paused>
-    </device>
     <gui enabled="true" tls="false" debugging="false">
         <address>0.0.0.0:{{ syncthing_port }}</address>
         <apikey>k1dnz1Dd0rzTBjjFFh7CXPnrF12C49B1</apikey>
@@ -37,7 +31,7 @@
     <options>
         <listenAddress>default</listenAddress>
         <globalAnnounceServer>default</globalAnnounceServer>
-        <globalAnnounceEnabled>true</globalAnnounceEnabled>
+        <globalAnnounceEnabled>false</globalAnnounceEnabled>
         <localAnnounceEnabled>true</localAnnounceEnabled>
         <localAnnouncePort>21027</localAnnouncePort>
         <localAnnounceMCAddr>[ff12::8384]:21027</localAnnounceMCAddr>
@@ -46,7 +40,7 @@
         <reconnectionIntervalS>60</reconnectionIntervalS>
         <relaysEnabled>false</relaysEnabled>
         <relayReconnectIntervalM>10</relayReconnectIntervalM>
-        <startBrowser>true</startBrowser>
+        <startBrowser>false</startBrowser>
         <natEnabled>true</natEnabled>
         <natLeaseMinutes>60</natLeaseMinutes>
         <natRenewalMinutes>30</natRenewalMinutes>
@@ -70,7 +64,7 @@
         <tempIndexMinBlocks>10</tempIndexMinBlocks>
         <trafficClass>0</trafficClass>
         <weakHashSelectionMethod>auto</weakHashSelectionMethod>
-        <stunServer>default</stunServer>
+        <stunServer></stunServer>
         <stunKeepaliveSeconds>24</stunKeepaliveSeconds>
         <kcpNoDelay>false</kcpNoDelay>
         <kcpUpdateIntervalMs>25</kcpUpdateIntervalMs>
