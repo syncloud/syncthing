@@ -27,8 +27,8 @@ DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-$(uname -m).tar.gz
 mkdir -p syncthing-src/src/github.com/syncthing
 
-wget https://github.com/cyberb/syncthing/archive/syncloid-build.zip
-unzip syncloid-build.zip
+wget https://github.com/cyberb/syncthing/archive/syncloud-build.zip
+unzip syncloud-build.zip
 mv syncthing-syncloud-build syncthing-src/src/github.com/syncthing/syncthing
 
 #wget https://github.com/syncthing/syncthing/archive/v${SYNCTHING_VERSION}.tar.gz
