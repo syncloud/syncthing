@@ -1,4 +1,4 @@
-<configuration version="26">
+<configuration version="28">
     <folder id="zj2AA-q55a7" label="Default Folder" path="/data/syncthing" type="sendreceive" rescanIntervalS="60"
             fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
@@ -75,5 +75,6 @@
         <defaultFolderPath>~</defaultFolderPath>
         <minHomeDiskFreePct>0</minHomeDiskFreePct>
         <setLowPriority>true</setLowPriority>
+        <UnackedNotificationIDs></UnackedNotificationIDs>
     </options>
 </configuration>
