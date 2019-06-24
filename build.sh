@@ -64,6 +64,7 @@ echo ${VERSION} >> ${BUILD_DIR}/META/version
 
 echo "snapping"
 SNAP_DIR=${DIR}/build/snap
+ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
 rm -rf ${DIR}/*.snap
 mkdir ${SNAP_DIR}
 cp -r ${BUILD_DIR}/* ${SNAP_DIR}/
