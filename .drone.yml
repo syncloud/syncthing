@@ -28,7 +28,7 @@ pipeline:
       - DOMAIN=$(cat domain)
       - NAME=$(cat name)
       - cd integration
-      - py.test -x -s verify.py --domain=$DOMAIN --app-archive-path=$APP_ARCHIVE_PATH --device-host=device --app=$NAME --device-user=gogs
+      - py.test -x -s verify.py --domain=$DOMAIN --app-archive-path=$APP_ARCHIVE_PATH --device-host=device --app=$NAME
 
   test-ui:
     image: syncloud/build-deps-${arch}
