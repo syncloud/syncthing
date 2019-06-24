@@ -39,7 +39,7 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, device, l
     device.run_ssh('{0}/syncthing/syncthing -version > {1}/syncthing.version.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
     device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), throw=False)
     device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR), throw=False)
-    device.run_ssh('systemctl status snap.syncthing.syncthing > {1}/syncthing.status.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
+    device.run_ssh('systemctl status snap.syncthing.syncthing > {0}/syncthing.status.log'.format(TMP_DIR), throw=False)
     device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR), throw=False)
     device.run_ssh('journalctl | tail -500 > {0}/journalctl.log'.format(TMP_DIR), throw=False)
     device.run_ssh('tail -500 /var/log/syslog > {0}/syslog.log'.format(TMP_DIR), throw=False)
