@@ -6,12 +6,12 @@ cd ${DIR}
 export TMPDIR=/tmp
 export TMP=/tmp
 
-NAME=syncthing
+NAME=$1
+ARCH=$(uname -m)
 CPU_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH_CPU)
-ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
 SYNCTHING_VERSION=0.14.51-rc.2
 #SYNCTHING_VERSION=1.0.71
-VERSION=$1
+VERSION=$2
 
 rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/${NAME}
@@ -19,12 +19,12 @@ mkdir -p ${BUILD_DIR}
 mkdir ${BUILD_DIR}/lib
 
 GO_ARCH=$CPU_ARCH
-if [ $(uname -m) == "armv7l" ]; then
+if [ ${ARCH} == "armv7l" ]; then
     GO_ARCH=armv6l
 fi
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
-coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-$(uname -m).tar.gz
+coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
 ${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
