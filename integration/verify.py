@@ -88,13 +88,13 @@ def test_activate_device(device):
     assert response.status_code == 200, response.text
 
 
-def test_install(app_archive_path, device_host):
-    local_install(device_host, DEVICE_PASSWORD, app_archive_path, 'snapd')
+def test_install(app_archive_path, device_host, device_password):
+    local_install(device_host, device_password, app_archive_path, 'snapd')
 
 
-def test_wrong_auth(user_domain):
+def test_wrong_auth(user_domain, device_user):
     session = requests.session()
-    response = session.get('https://{0}'.format(user_domain), auth=(DEVICE_USER, 'wrongpass'), allow_redirects=False, verify=False)
+    response = session.get('https://{0}'.format(user_domain), auth=(device_user, 'wrongpass'), allow_redirects=False, verify=False)
     print(response.text.encode("UTF-8"))
     print(response.headers)
     assert response.status_code != 200, response.text
@@ -112,5 +112,5 @@ def test_remove(device_session, device_host):
     wait_for_installer(device_session, device_host)
 
 
-def test_reinstall(app_archive_path, device_host):
-    local_install(device_host, DEVICE_PASSWORD, app_archive_path, 'snapd')
+def test_reinstall(app_archive_path, device_host, device_password):
+    local_install(device_host, device_password, app_archive_path, 'snapd')
