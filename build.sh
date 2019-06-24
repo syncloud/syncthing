@@ -25,6 +25,9 @@ fi
 
 DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
 coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/nginx-$(uname -m).tar.gz
+coin --to ${BUILD_DIR} raw ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
+${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
+
 mkdir -p syncthing-src/src/github.com/syncthing
 
 wget https://github.com/cyberb/syncthing/archive/syncloud-build.zip
@@ -50,10 +53,6 @@ mv syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing
 cd $DIR
 
 ${BUILD_DIR}/syncthing/syncthing --help || true
-
-DOWNLOAD_URL=http://artifact.syncloud.org/3rdparty
-
-coin --to ${BUILD_DIR}/lib py https://pypi.python.org/packages/3c/3a/ce5fe9623d93d442d9fc8b0fbf5ccb16298826782f4e5c6d85a007a5d5de/syncloud-lib-39.tar.gz#md5=6f276666c88bc63d856b82da07f7c846
 
 cp -r ${DIR}/bin ${BUILD_DIR}
 cp -r ${DIR}/hooks ${BUILD_DIR}

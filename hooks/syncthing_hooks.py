@@ -10,9 +10,7 @@ import uuid
 from subprocess import check_output
 
 import logging
-from syncloud_app import logger
-from syncloud_platform.application import api
-from syncloud_platform.gaplib import fs, linux, gen
+from syncloudlib import fs, linux, gen, logger
 from syncloudlib.application import paths, urls, storage, users
 
 
