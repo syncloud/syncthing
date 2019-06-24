@@ -12,63 +12,36 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.support.ui import WebDriverWait
+from syncloudlib.integration.hosts import add_host_alias
+from syncloudlib.integration.screenshots import screenshots
 
 DIR = dirname(__file__)
-LOG_DIR = join(DIR, 'log')
-DEVICE_USER = 'user'
-DEVICE_PASSWORD = 'password'
-log_dir = join(LOG_DIR, 'syncthing_log')
 screenshot_dir = join(DIR, 'screenshot')
+TMP_DIR = '/tmp/syncloud/ui'
+
+@pytest.fixture(scope="session")
+def module_setup(request, device, log_dir, ui_mode):
+    request.addfinalizer(lambda: module_teardown(device, log_dir, ui_mode))
 
 
-@pytest.fixture(scope="module")
-def driver():
-
-    if exists(screenshot_dir):
-        shutil.rmtree(screenshot_dir)
-    os.mkdir(screenshot_dir)
-
-    firefox_path = '/tools/firefox/firefox'
-    caps = DesiredCapabilities.FIREFOX
-    caps["marionette"] = True
-    caps['acceptSslCerts'] = True
-
-    binary = FirefoxBinary(firefox_path)
-
-    profile = webdriver.FirefoxProfile()
-    profile.add_extension('/tools/firefox/JSErrorCollector.xpi')
-    profile.set_preference('app.update.auto', False)
-    profile.set_preference('app.update.enabled', False)
-    driver = webdriver.Firefox(profile,
-                               capabilities=caps, log_path="{0}/firefox.log".format(LOG_DIR),
-                               firefox_binary=binary, executable_path=join(DIR, '/tools/geckodriver/geckodriver'))
-
-    # driver.set_page_load_timeout(30)
-    # print driver.capabilities['version']
-    return driver
+def module_teardown(device, log_dir, ui_mode):
+    device.activated()
+    device.run_ssh('mkdir -p {0}'.format(TMP_DIR), throw=False)
+    device.run_ssh('journalctl > {0}/journalctl.ui.{1}.log'.format(TMP_DIR, ui_mode), throw=False)
+    device.run_ssh('cp /var/log/syslog {0}/syslog.ui.{1}.log'.format(TMP_DIR, ui_mode), throw=False)
+      
+    device.scp_from_device('{0}/*'.format(TMP_DIR), join(log_dir, 'log'))
 
 
-def test_login(driver, user_domain):
+def test_start(module_setup, app, device_host):
+    if not exists(screenshot_dir):
+        os.mkdir(screenshot_dir)
+
+    add_host_alias(app, device_host)
+
+
+def test_login(driver, user_domain, ui_mode):
 
     driver.get("https://{0}:{1}@{2}".format(DEVICE_USER, DEVICE_PASSWORD, user_domain))
     time.sleep(10)
-    print(driver.execute_script('return window.JSErrorCollector_errors ? window.JSErrorCollector_errors.pump() : []'))
-    screenshots(driver, screenshot_dir, 'login')
-       
-
-def screenshots(driver, dir, name):
-    desktop_w = 1024
-    desktop_h = 768
-    driver.set_window_position(0, 0)
-    driver.set_window_size(desktop_w, desktop_h)
-
-    driver.get_screenshot_as_file(join(dir, '{}.png'.format(name)))
-
-    mobile_w = 400
-    mobile_h = 2000
-    driver.set_window_position(0, 0)
-    driver.set_window_size(mobile_w, mobile_h)
-    driver.get_screenshot_as_file(join(dir, '{}-mobile.png'.format(name)))
-    
-    driver.set_window_position(0, 0)
-    driver.set_window_size(desktop_w, desktop_h)
+    screenshots(driver, screenshot_dir, 'login-' + ui_mode)

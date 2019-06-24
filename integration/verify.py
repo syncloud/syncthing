@@ -89,7 +89,7 @@ def test_activate_device(device):
 
 
 def test_install(app_archive_path, device_host, device_password):
-    local_install(device_host, device_password, app_archive_path, 'snapd')
+    local_install(device_host, device_password, app_archive_path)
 
 
 def test_wrong_auth(user_domain, device_user):
@@ -113,4 +113,4 @@ def test_remove(device_session, device_host):
 
 
 def test_reinstall(app_archive_path, device_host, device_password):
-    local_install(device_host, device_password, app_archive_path, 'snapd')
+    local_install(device_host, device_password, app_archive_path)
