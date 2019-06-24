@@ -39,7 +39,7 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, device, l
     device.run_ssh('{0}/syncthing/syncthing -version > {1}/syncthing.version.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
     device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), throw=False)
     device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR), throw=False)
-    device.run_ssh('systemctl status {0}syncthing.syncthing > {1}/syncthing.status.log'.format(service_prefix, TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
+    device.run_ssh('systemctl status snap.syncthing.syncthing > {1}/syncthing.status.log'.format(TMP_DIR), password=LOGS_SSH_PASSWORD, throw=False)
     device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR), throw=False)
     device.run_ssh('journalctl | tail -500 > {0}/journalctl.log'.format(TMP_DIR), throw=False)
     device.run_ssh('tail -500 /var/log/syslog > {0}/syslog.log'.format(TMP_DIR), throw=False)
@@ -58,16 +58,16 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, device, l
     
 
 @pytest.fixture(scope='function')
-def syncloud_session(device_host):
+def syncloud_session(device_host, device_user, device_password):
     session = requests.session()
-    session.post('https://{0}/rest/login'.format(device_host), data={'name': DEVICE_USER, 'password': DEVICE_PASSWORD}, verify=False)
+    session.post('https://{0}/rest/login'.format(device_host), data={'name': device_user, 'password': device_password}, verify=False)
     return session
 
 
 @pytest.fixture(scope='function')
-def syncthing_session(user_domain):
+def syncthing_session(user_domain, device_user, device_password):
     session = requests.session()
-    response = session.get('https://{0}'.format(user_domain), auth=(DEVICE_USER, DEVICE_PASSWORD), allow_redirects=False, verify=False)
+    response = session.get('https://{0}'.format(user_domain), auth=(device_user, device_password), allow_redirects=False, verify=False)
     print(response.text.encode("UTF-8"))
     print(response.headers)
     assert response.status_code == 200, response.text
@@ -104,11 +104,11 @@ def test_resource(syncthing_session, user_domain):
     assert response.status_code == 200, response.text
 
 
-def test_remove(syncloud_session, device_host):
-    response = syncloud_session.get('https://{0}/rest/remove?app_id=syncthing'.format(device_host),
+def test_remove(device_session, device_host):
+    response = device_session.get('https://{0}/rest/remove?app_id=syncthing'.format(device_host),
                                     allow_redirects=False, verify=False)
     assert response.status_code == 200, response.text
-    wait_for_sam(syncloud_session, device_host)
+    wait_for_installer(device_session, device_host)
 
 
 def test_reinstall(app_archive_path, device_host):
