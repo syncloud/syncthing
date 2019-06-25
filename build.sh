@@ -9,8 +9,8 @@ export TMP=/tmp
 NAME=$1
 ARCH=$(uname -m)
 CPU_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH_CPU)
-SYNCTHING_VERSION=0.14.51-rc.2
-#SYNCTHING_VERSION=1.0.71
+#SYNCTHING_VERSION=0.14.51-rc.2
+SYNCTHING_VERSION=1.1.4
 VERSION=$2
 
 rm -rf ${DIR}/build
@@ -30,13 +30,13 @@ ${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
 mkdir -p syncthing-src/src/github.com/syncthing
 
-wget https://github.com/cyberb/syncthing/archive/syncloud-build.zip
-unzip syncloud-build.zip
-mv syncthing-syncloud-build syncthing-src/src/github.com/syncthing/syncthing
+#wget https://github.com/cyberb/syncthing/archive/syncloud-build.zip
+#unzip syncloud-build.zip
+#mv syncthing-syncloud-build syncthing-src/src/github.com/syncthing/syncthing
 
-#wget https://github.com/syncthing/syncthing/archive/v${SYNCTHING_VERSION}.tar.gz
-#tar xf v${SYNCTHING_VERSION}.tar.gz
-#mv syncthing-${SYNCTHING_VERSION} syncthing-src/src/github.com/syncthing/syncthing
+wget https://github.com/syncthing/syncthing/archive/v${SYNCTHING_VERSION}.tar.gz
+tar xf v${SYNCTHING_VERSION}.tar.gz
+mv syncthing-${SYNCTHING_VERSION} syncthing-src/src/github.com/syncthing/syncthing
 
 GO_VERSION=1.10.4
 wget https://dl.google.com/go/go$GO_VERSION.linux-$GO_ARCH.tar.gz --progress=dot:giga
