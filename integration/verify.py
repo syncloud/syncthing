@@ -66,9 +66,9 @@ def syncloud_session(device_host, device_user, device_password):
 
 
 @pytest.fixture(scope='function')
-def syncthing_session(user_domain, device_user, device_password):
+def syncthing_session(app_domain, device_user, device_password):
     session = requests.session()
-    response = session.get('https://{0}'.format(user_domain), auth=(device_user, device_password), allow_redirects=False, verify=False)
+    response = session.get('https://{0}'.format(app_domain), auth=(device_user, device_password), allow_redirects=False, verify=False)
     print(response.text.encode("UTF-8"))
     print(response.headers)
     assert response.status_code == 200, response.text
