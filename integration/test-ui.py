@@ -40,8 +40,8 @@ def test_start(module_setup, app, device_host):
     add_host_alias(app, device_host)
 
 
-def test_login(driver, user_domain, ui_mode):
+def test_login(driver, app_domain, ui_mode, device_user, device_password):
 
-    driver.get("https://{0}:{1}@{2}".format(DEVICE_USER, DEVICE_PASSWORD, user_domain))
+    driver.get("https://{0}:{1}@{2}".format(device_user, device_password, app_domain))
     time.sleep(10)
     screenshots(driver, screenshot_dir, 'login-' + ui_mode)
