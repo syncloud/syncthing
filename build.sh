@@ -45,7 +45,9 @@ export GOROOT=$(pwd)/go
 export PATH=$PATH:$GOROOT/bin
 export GOPATH=$(pwd)/syncthing-src
 cd syncthing-src/src/github.com/syncthing/syncthing
-./build.sh assets
+#./build.sh assets
+GO111MODULE=on go mod vendor
+go run build.go assets
 go run build.go -version v${SYNCTHING_VERSION} tar
 tar xf syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION}.tar.gz 
 mv syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing 
