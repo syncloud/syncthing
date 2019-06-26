@@ -12,6 +12,7 @@ CPU_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH_CPU)
 #SYNCTHING_VERSION=0.14.51-rc.2
 SYNCTHING_VERSION=1.1.4
 VERSION=$2
+GO_VERSION=1.11.5
 
 rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/${NAME}
@@ -38,7 +39,6 @@ wget https://github.com/syncthing/syncthing/archive/v${SYNCTHING_VERSION}.tar.gz
 tar xf v${SYNCTHING_VERSION}.tar.gz
 mv syncthing-${SYNCTHING_VERSION} syncthing-src/src/github.com/syncthing/syncthing
 
-GO_VERSION=1.10.4
 wget https://dl.google.com/go/go$GO_VERSION.linux-$GO_ARCH.tar.gz --progress=dot:giga
 tar xf go$GO_VERSION.linux-$GO_ARCH.tar.gz
 export GOROOT=$(pwd)/go
