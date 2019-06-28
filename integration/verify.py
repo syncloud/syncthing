@@ -59,13 +59,6 @@ def module_teardown(device_host, data_dir, platform_data_dir, app_dir, device, l
     
 
 @pytest.fixture(scope='function')
-def syncloud_session(device_host, device_user, device_password):
-    session = requests.session()
-    session.post('https://{0}/rest/login'.format(device_host), data={'name': device_user, 'password': device_password}, verify=False)
-    return session
-
-
-@pytest.fixture(scope='function')
 def syncthing_session(app_domain, device_user, device_password):
     session = requests.session()
     response = session.get('https://{0}'.format(app_domain), auth=(device_user, device_password), allow_redirects=False, verify=False)
