@@ -46,8 +46,8 @@ export PATH=$PATH:$GOROOT/bin
 export GOPATH=$(pwd)/syncthing-src
 cd syncthing-src/src/github.com/syncthing/syncthing
 #./build.sh assets
-go get gopkg.in/ldap.v3
-go mod vendor
+GO111MODULE=on go get gopkg.in/ldap.v3
+GO111MODULE=on go mod vendor
 #go run build.go assets
 go run build.go -version v${SYNCTHING_VERSION} tar
 tar xf syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION}.tar.gz 
