@@ -10,7 +10,7 @@ NAME=$1
 ARCH=$(uname -m)
 CPU_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH_CPU)
 #SYNCTHING_VERSION=0.14.51-rc.2
-SYNCTHING_VERSION=1.0.0
+SYNCTHING_VERSION=1.1.0
 VERSION=$2
 GO_VERSION=1.11.5
 
@@ -46,8 +46,9 @@ export PATH=$PATH:$GOROOT/bin
 export GOPATH=$(pwd)/syncthing-src
 cd syncthing-src/src/github.com/syncthing/syncthing
 #./build.sh assets
-#GO111MODULE=on go mod vendor
-go run build.go assets
+go get gopkg.in/ldap.v3
+go mod vendor
+#go run build.go assets
 go run build.go -version v${SYNCTHING_VERSION} tar
 tar xf syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION}.tar.gz 
 mv syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing 
