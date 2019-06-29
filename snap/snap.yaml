@@ -1,6 +1,5 @@
 apps:
   syncthing:
-    user: syncthing
     command: bin/service.syncthing.sh start
     daemon: simple
     plugs:
