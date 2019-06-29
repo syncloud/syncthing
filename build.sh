@@ -47,6 +47,7 @@ export GOPATH=$(pwd)/syncthing-src
 cd syncthing-src/src/github.com/syncthing/syncthing
 #./build.sh assets
 GO111MODULE=on go get gopkg.in/ldap.v3
+GO111MODULE=on go mod tidy
 GO111MODULE=on go mod vendor
 #go run build.go assets
 go run build.go -version v${SYNCTHING_VERSION} tar
