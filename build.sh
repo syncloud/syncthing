@@ -47,6 +47,7 @@ export GOPATH=$(pwd)/syncthing-src
 cd syncthing-src/src/github.com/syncthing/syncthing
 #./build.sh assets
 GO111MODULE=on go get gopkg.in/ldap.v3
+find . -type f -name "*.go" -print0 | xargs -0 sed -i 's#gopkg.in/ldap.v2#gopkg.in/ldap.v3#g'
 GO111MODULE=on go mod tidy
 GO111MODULE=on go mod vendor
 #go run build.go assets
