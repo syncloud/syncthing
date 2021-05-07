@@ -18,6 +18,6 @@ mv python3 python
 wget --progress=dot:giga ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
 
-wget https://github.com/syncthing/syncthing/archive/v${SYNCTHING_VERSION}.tar.gz
-tar xf v${SYNCTHING_VERSION}.tar.gz
-mv syncthing-${SYNCTHING_VERSION} syncthing
+wget https://github.com/syncthing/syncthing/archive/v${VERSION}.tar.gz
+tar xf v${VERSION}.tar.gz
+mv syncthing-${VERSION} syncthing
