@@ -15,22 +15,9 @@ BUILD_DIR=${DIR}/build/${NAME}
 mkdir -p ${BUILD_DIR}
 mkdir ${BUILD_DIR}/lib
 
-wget --progress=dot:giga ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
-tar xf nginx-${ARCH}.tar.gz
-mv nginx ${BUILD_DIR}/
-
-wget --progress=dot:giga ${DOWNLOAD_URL}/python-${ARCH}.tar.gz
-tar xf python-${ARCH}.tar.gz
-mv python ${BUILD_DIR}/
 ${BUILD_DIR}/python/bin/pip install -r ${DIR}/requirements.txt
 
-#wget https://github.com/cyberb/syncthing/archive/syncloud-build.zip
-#unzip syncloud-build.zip
-#mv syncthing-syncloud-build syncthing-src/src/github.com/syncthing/syncthing
-
-wget https://github.com/syncthing/syncthing/archive/v${SYNCTHING_VERSION}.tar.gz
-tar xf v${SYNCTHING_VERSION}.tar.gz
-cd syncthing-${SYNCTHING_VERSION}
+cd syncthing
 go run build.go -version v${SYNCTHING_VERSION} tar
 tar xf syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION}.tar.gz 
 mv syncthing-linux-${CPU_ARCH}-v${SYNCTHING_VERSION} ${BUILD_DIR}/syncthing 
