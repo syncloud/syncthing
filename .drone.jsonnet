@@ -1,5 +1,6 @@
 local name = "syncthing";
 local browser = "firefox";
+local version = "1.16.1";
 
 local build(arch) = {
     kind: "pipeline",
@@ -22,14 +23,14 @@ local build(arch) = {
             name: "download",
             image: "syncloud/build-deps-" + arch + ":2021.4.1",
             commands: [
-                "./download.sh"
+                "./download.sh " + version
             ]
         },
         {
             name: "build",
             image: "golang:1.14",
             commands: [
-                "./build.sh"
+                "./build.sh " + version
             ]
         },
         {

@@ -2,7 +2,7 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-VERSION=1.16.1
+VERSION=$1
 DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/1
 ARCH=$(uname -m)
 rm -rf ${DIR}/build
