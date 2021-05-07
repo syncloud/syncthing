@@ -10,7 +10,10 @@ ${DIR}/build/python/bin/pip install -r ${DIR}/requirements.txt
 
 cd ${DIR}/build/syncthing
 go run build.go -version v${VERSION} tar
-tar xf syncthing-linux-*-v${VERSION}.tar.gz 
+tar xf syncthing-linux-*-v${VERSION}.tar.gz
+
+ls -la
+
 mv syncthing-linux-*-v${VERSION} syncthing 
 
 ${DIR}/build/syncthing/syncthing --help || true
