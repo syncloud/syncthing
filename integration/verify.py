@@ -1,62 +1,55 @@
-import json
 import os
-import sys
-from os import listdir
-from os.path import dirname, join, exists, abspath, isdir
-import time
-from subprocess import check_output
-import pytest
 import shutil
+from os.path import dirname, join
+from subprocess import check_output
 
-from syncloudlib.integration.loop import loop_device_add, loop_device_cleanup
-from syncloudlib.integration.ssh import run_scp, run_ssh
-from syncloudlib.integration.installer import local_install, wait_for_installer, wait_for_rest, local_remove
-from syncloudlib.integration.hosts import add_host_alias
-
+import pytest
 import requests
+from syncloudlib.integration.hosts import add_host_alias
+from syncloudlib.integration.installer import local_install, wait_for_installer
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud'
 
 
 @pytest.fixture(scope="session")
-def module_setup(request, device_host, data_dir, platform_data_dir, app_dir, device, log_dir):
-    request.addfinalizer(lambda: module_teardown(device_host, data_dir, platform_data_dir, app_dir, device, log_dir))
+def module_setup(request, device, data_dir, platform_data_dir, app_dir, artifact_dir, snap_data_dir):
 
+    def module_teardown():
+        platform_log_dir = join(artifact_dir, 'platform_log')
+        os.mkdir(platform_log_dir)
+        device.scp_from_device('{0}/log/*'.format(platform_data_dir), platform_log_dir)
 
-def module_teardown(device_host, data_dir, platform_data_dir, app_dir, device, log_dir):
-    platform_log_dir = join(log_dir, 'platform_log')
-    os.mkdir(platform_log_dir)
-    run_scp('root@{0}:{1}/log/* {2}'.format(device_host, platform_data_dir, platform_log_dir), throw=False)
-    
-    app_log_dir  = join(log_dir, 'syncthing_log')
-    os.mkdir(app_log_dir )
-    device.scp_from_device('{0}/log/*.log'.format(data_dir), app_log_dir, throw=False)
+        device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la {0} > {1}/app.data.ls.log'.format(data_dir, TMP_DIR), throw=False)
+        device.run_ssh('ls -la {0}/syncthing/config > {1}/config.ls.log'.format(data_dir, TMP_DIR), throw=False)
+        device.run_ssh('{0}/syncthing/syncthing --help > {1}/syncthing.help.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
+        device.run_ssh('{0}/syncthing/syncthing -version > {1}/syncthing.version.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
+        device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('systemctl status snap.syncthing.syncthing > {0}/syncthing.status.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('journalctl | tail -500 > {0}/journalctl.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('tail -500 /var/log/syslog > {0}/syslog.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('tail -500 /var/log/messages > {0}/messages.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /snap/syncthing > {0}/snap.syncthing.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /var/snap > {0}/var.snap.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /var/snap/syncthing > {0}/var.snap.syncthing.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /var/snap/syncthing/common > {0}/var.snap.syncthing.common.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /var/snap/syncthing/common/config > {0}/var.snap.syncthing.common.config.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /var/snap/syncthing/common/config/syncthing > {0}/var.snap.syncthing.common.config.syncthing.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /data > {0}/data.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /data/syncthing > {0}/data.syncthing.ls.log'.format(TMP_DIR), throw=False)
 
-    device.run_ssh('mkdir {0}'.format(TMP_DIR))
-    device.run_ssh('ls -la {0} > {1}/app.data.ls.log'.format(data_dir, TMP_DIR), throw=False)
-    device.run_ssh('ls -la {0}/syncthing/config > {1}/config.ls.log'.format(data_dir, TMP_DIR), throw=False)
-    device.run_ssh('{0}/syncthing/syncthing --help > {1}/syncthing.help.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
-    device.run_ssh('{0}/syncthing/syncthing -version > {1}/syncthing.version.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
-    device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), throw=False)
-    device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR), throw=False)
-    device.run_ssh('systemctl status snap.syncthing.syncthing > {0}/syncthing.status.log'.format(TMP_DIR), throw=False)
-    device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR), throw=False)
-    device.run_ssh('journalctl | tail -500 > {0}/journalctl.log'.format(TMP_DIR), throw=False)
-    device.run_ssh('tail -500 /var/log/syslog > {0}/syslog.log'.format(TMP_DIR), throw=False)
-    device.run_ssh('tail -500 /var/log/messages > {0}/messages.log'.format(TMP_DIR), throw=False)    
-    device.run_ssh('ls -la /snap > {0}/snap.ls.log'.format(TMP_DIR), throw=False)    
-    device.run_ssh('ls -la /snap/syncthing > {0}/snap.syncthing.ls.log'.format(TMP_DIR), throw=False)    
-    device.run_ssh('ls -la /var/snap > {0}/var.snap.ls.log'.format(TMP_DIR), throw=False)    
-    device.run_ssh('ls -la /var/snap/syncthing > {0}/var.snap.syncthing.ls.log'.format(TMP_DIR), throw=False)    
-    device.run_ssh('ls -la /var/snap/syncthing/common > {0}/var.snap.syncthing.common.ls.log'.format(TMP_DIR), throw=False)    
-    device.run_ssh('ls -la /var/snap/syncthing/common/config > {0}/var.snap.syncthing.common.config.ls.log'.format(TMP_DIR), throw=False)    
-    device.run_ssh('ls -la /var/snap/syncthing/common/config/syncthing > {0}/var.snap.syncthing.common.config.syncthing.ls.log'.format(TMP_DIR), throw=False)    
-    device.run_ssh('ls -la /data > {0}/data.ls.log'.format(TMP_DIR), throw=False)    
-    device.run_ssh('ls -la /data/syncthing > {0}/data.syncthing.ls.log'.format(TMP_DIR), throw=False)    
-    
-    device.scp_from_device('{0}/*.log'.format(TMP_DIR), app_log_dir, throw=False)
-    
+        app_log_dir = join(artifact_dir, 'log')
+        os.mkdir(app_log_dir)
+        device.scp_from_device('{0}/log/*.log'.format(data_dir), app_log_dir, throw=False)
+        device.scp_from_device('{0}/*.log'.format(TMP_DIR), app_log_dir, throw=False)
+        check_output('chmod -R a+r {0}'.format(artifact_dir), shell=True)
+
+    request.addfinalizer(module_teardown)
+
 
 @pytest.fixture(scope='function')
 def syncthing_session(app_domain, device_user, device_password):
@@ -88,7 +81,8 @@ def test_install(app_archive_path, device_host, device_password, device_session)
 
 def test_wrong_auth(app_domain, device_user):
     session = requests.session()
-    response = session.get('https://{0}'.format(app_domain), auth=(device_user, 'wrongpass'), allow_redirects=False, verify=False)
+    response = session.get('https://{0}'.format(app_domain), auth=(device_user, 'wrongpass'), allow_redirects=False,
+                           verify=False)
     print(response.text.encode("UTF-8"))
     print(response.headers)
     assert response.status_code != 200, response.text
@@ -99,11 +93,9 @@ def test_resource(syncthing_session, app_domain):
     assert response.status_code == 200, response.text
 
 
-def test_remove(device_session, device_host):
-    response = device_session.get('https://{0}/rest/remove?app_id=syncthing'.format(device_host),
-                                    allow_redirects=False, verify=False)
+def test_remove(device, app):
+    response = device.app_remove(app)
     assert response.status_code == 200, response.text
-    wait_for_installer(device_session, device_host)
 
 
 def test_reinstall(app_archive_path, device_host, device_password):
