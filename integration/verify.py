@@ -93,11 +93,9 @@ def test_resource(syncthing_session, app_domain):
     assert response.status_code == 200, response.text
 
 
-def test_remove(device_session, device_host):
-    response = device_session.get('https://{0}/rest/remove?app_id=syncthing'.format(device_host),
-                                  allow_redirects=False, verify=False)
+def test_remove(device, app):
+    response = device.app_remove(app)
     assert response.status_code == 200, response.text
-    wait_for_installer(device_session, device_host)
 
 
 def test_reinstall(app_archive_path, device_host, device_password):
