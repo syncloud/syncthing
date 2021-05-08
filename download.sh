@@ -20,4 +20,4 @@ tar xf nginx-${ARCH}.tar.gz
 
 wget https://github.com/syncthing/syncthing/archive/v${VERSION}.tar.gz
 tar xf v${VERSION}.tar.gz
-mv syncthing-${VERSION} syncthing
+mv syncthing-${VERSION} syncthing-src

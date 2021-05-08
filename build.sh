@@ -8,12 +8,12 @@ DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/1
 
 ${DIR}/build/python/bin/pip install -r ${DIR}/requirements.txt
 
-cd ${DIR}/build/syncthing
+cd ${DIR}/build/syncthing-src
 go run build.go -version v${VERSION} tar
 tar xf syncthing-linux-*-v${VERSION}.tar.gz
 
 ls -la
 
-mv syncthing-linux-*-v${VERSION} syncthing 
+mv syncthing-linux-*-v${VERSION} {DIR}/build/syncthing
 
 ${DIR}/build/syncthing/syncthing --help || true
