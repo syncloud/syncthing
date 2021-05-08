@@ -32,3 +32,6 @@ def test_login(driver, app_domain, selenium, device_user, device_password):
     time.sleep(10)
     selenium.screenshot('login')
 
+
+def test_teardown(driver):
+    driver.quit()
