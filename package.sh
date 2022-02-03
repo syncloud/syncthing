@@ -11,6 +11,10 @@ NAME=$1
 DEB_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
 VERSION=$2
 BUILD_DIR=${DIR}/build/app
+
+apt update
+apt -y install squashfs-tools
+
 mkdir $BUILD_DIR
 
 mv ${DIR}/build/python ${BUILD_DIR}

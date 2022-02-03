@@ -1,8 +1,8 @@
 local name = "syncthing";
 local browser = "firefox";
-local version = "1.16.1";
+local version = "1.19.0";
 
-local build(arch) = {
+local build(arch, test_ui) = [{
     kind: "pipeline",
     type: "docker",
     name: arch,
@@ -13,15 +13,32 @@ local build(arch) = {
     steps: [
         {
             name: "version",
-            image: "syncloud/build-deps-" + arch + ":2021.4.1",
+            image: "debian:buster-slim",
             commands: [
-                "echo $(date +%y%m%d)$DRONE_BUILD_NUMBER > version",
+                "echo $DRONE_BUILD_NUMBER > version",
                 "echo " + arch + "$DRONE_BRANCH > domain"
             ]
         },
         {
+            name: "build python",
+            image: "debian:buster-slim",
+            commands: [
+                "./python/build.sh"
+            ],
+            volumes: [
+                {
+                    name: "docker",
+                    path: "/usr/bin/docker"
+                },
+                {
+                    name: "docker.sock",
+                    path: "/var/run/docker.sock"
+                }
+            ]
+        },
+        {
             name: "download",
-            image: "syncloud/build-deps-" + arch + ":2021.4.1",
+            image: "debian:buster-slim",
             commands: [
                 "./download.sh " + version
             ]
@@ -35,7 +52,7 @@ local build(arch) = {
         },
         {
             name: "package",
-            image: "syncloud/build-deps-" + arch + ":2021.4.1",
+            image: "debian:buster-slim",
             commands: [
                 "VERSION=$(cat version)",
                 "./package.sh " + name + " $VERSION"
@@ -52,7 +69,7 @@ local build(arch) = {
               "cd integration",
               "py.test -x -s verify.py --domain=$DOMAIN --app-archive-path=$APP_ARCHIVE_PATH --device-host=device --app=" + name
             ]
-        }] + ( if arch == "arm" then [] else [
+        }] + ( if test_ui then [
         {
             name: "test-ui-desktop",
             image: "python:3.9-buster",
@@ -82,7 +99,7 @@ local build(arch) = {
                 name: "shm",
                 path: "/dev/shm"
             }]
-        }]) + [
+        }] else [] ) + [
         {
             name: "upload",
             image: "python:3.9-buster",
@@ -99,7 +116,10 @@ local build(arch) = {
               "PACKAGE=$(cat package.name)",
               "pip install syncloud-lib s3cmd",
               "syncloud-upload.sh " + name + " $DRONE_BRANCH $VERSION $PACKAGE"
-            ]
+            ],
+            when: {
+                branch: ["stable", "master"]
+            }
         },
         {
             name: "artifact",
@@ -139,14 +159,14 @@ local build(arch) = {
                 }
             ]
         }
-    ] + if arch == "arm" then [] else [{
+    ] + if test_ui then [{
             name: "selenium",
             image: "selenium/standalone-" + browser + ":4.0.0-beta-3-prerelease-20210402",
             volumes: [{
                 name: "shm",
                 path: "/dev/shm"
             }]
-        }],
+        }] else [],
     volumes: [
         {
             name: "dbus",
@@ -165,10 +185,43 @@ local build(arch) = {
             temp: {}
         }
     ]
-};
+},
+{
+    kind: "pipeline",
+    type: "docker",
+    name: "promote-" + arch,
+    platform: {
+      os: "linux",
+      arch: arch
+    },
+    steps: [
+    {
+          name: "promote",
+          image: "debian:buster-slim",
+          environment: {
+              AWS_ACCESS_KEY_ID: {
+                  from_secret: "AWS_ACCESS_KEY_ID"
+              },
+              AWS_SECRET_ACCESS_KEY: {
+                  from_secret: "AWS_SECRET_ACCESS_KEY"
+              }
+          },
+          commands: [
+            "apt update && apt install -y wget",
+            "wget https://github.com/syncloud/snapd/releases/download/1/syncloud-release-" + arch + " -O release --progress=dot:giga",
+            "chmod +x release",
+            "./release promote -n " + name + " -a $(dpkg --print-architecture)"
+          ]
+    }
+    ],
+    trigger: {
+        event: [
+          "promote"
+        ]
+    }
+}];
 
 
-[
-    build("arm"),
-    build("amd64")
-]
+build("amd64", true) +
+build("arm", false) +
+build("arm64", false)
