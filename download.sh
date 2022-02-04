@@ -15,7 +15,6 @@ cd $BUILD_DIR
 
 wget -c --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/nginx/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
-mv nginx ${BUILD_DIR}
 
 wget https://github.com/syncthing/syncthing/archive/v${VERSION}.tar.gz
 tar xf v${VERSION}.tar.gz
