@@ -5,8 +5,6 @@ cd ${DIR}
 
 VERSION=$1
 
-${DIR}/build/python/bin/pip install -r ${DIR}/requirements.txt
-
 cd ${DIR}/build/syncthing-src
 go run build.go -version v${VERSION} tar
 tar xf syncthing-linux-*-v${VERSION}.tar.gz
