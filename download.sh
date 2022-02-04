@@ -4,7 +4,6 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 VERSION=$1
 ARCH=$(uname -m)
-rm -rf ${DIR}/build
 BUILD_DIR=${DIR}/build/app
 
 apt update
