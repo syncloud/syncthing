@@ -2,14 +2,14 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-if [[ -z "$2" ]]; then
-    echo "usage $0 app version"
+if [[ -z "$3" ]]; then
+    echo "usage $0 app version arch"
     exit 1
 fi
 
 NAME=$1
-DEB_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
 VERSION=$2
+ARCH=$3
 BUILD_DIR=${DIR}/build/app
 
 apt update
@@ -37,9 +37,9 @@ cp -r ${DIR}/snap/meta ${SNAP_DIR}/
 cp ${DIR}/snap/snap.yaml ${SNAP_DIR}/meta/snap.yaml
 echo "version: $VERSION" >> ${SNAP_DIR}/meta/snap.yaml
 echo "architectures:" >> ${SNAP_DIR}/meta/snap.yaml
-echo "- ${DEB_ARCH}" >> ${SNAP_DIR}/meta/snap.yaml
+echo "- ${ARCH}" >> ${SNAP_DIR}/meta/snap.yaml
 
-PACKAGE=${NAME}_${VERSION}_${DEB_ARCH}.snap
+PACKAGE=${NAME}_${VERSION}_${ARCH}.snap
 echo ${PACKAGE} > ${DIR}/package.name
 mksquashfs ${SNAP_DIR} ${DIR}/${PACKAGE} -noappend -comp xz -no-xattrs -all-root
 
