@@ -15,13 +15,8 @@ BUILD_DIR=${DIR}/build/app
 apt update
 apt -y install squashfs-tools
 
-mkdir $BUILD_DIR
-
-mv ${DIR}/build/python ${BUILD_DIR}
-mv ${DIR}/build/nginx ${BUILD_DIR}
 cp -r ${DIR}/bin ${BUILD_DIR}/bin
-mv ${DIR}/build/syncthing ${BUILD_DIR}
-cp -r ${DIR}/config ${BUILD_DIR}/config.templates
+cp -r ${DIR}/config ${BUILD_DIR}
 cp -r ${DIR}/hooks ${BUILD_DIR}
 
 mkdir ${BUILD_DIR}/META

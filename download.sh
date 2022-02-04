@@ -5,8 +5,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 VERSION=$1
 ARCH=$(uname -m)
 rm -rf ${DIR}/build
-BUILD_DIR=${DIR}/build
-mkdir -p ${BUILD_DIR}
+BUILD_DIR=${DIR}/build/app
 
 apt update
 apt -y install wget
