@@ -62,7 +62,6 @@ def syncthing_session(app_domain, device_user, device_password):
 
 
 def test_start(module_setup, device, device_host, app, log_dir, domain):
-    def test_start(module_setup, device, app, domain, device_host):
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=100, throw=True)
 
@@ -99,3 +98,4 @@ def test_remove(device, app):
 
 def test_reinstall(app_archive_path, device_host, device_password):
     local_install(device_host, device_password, app_archive_path)
+:
