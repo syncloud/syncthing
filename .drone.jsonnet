@@ -62,7 +62,7 @@ local build(arch, test_ui) = [{
             name: "test-integration",
             image: "python:3.9-buster",
             commands: [
-              "apt-get update && apt-get install -y sshpass openssh-client netcat rustc",
+              "apt-get update && apt-get install -y sshpass openssh-client netcat rustc file libxml2-dev libxslt-dev build-essential libz-dev curl",
               "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
               "cd integration",
               "pip install -r requirements.txt",
