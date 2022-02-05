@@ -3,6 +3,7 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 VERSION=$1
+GO_ARCH=$2
 ARCH=$(uname -m)
 
 apt update
@@ -15,8 +16,9 @@ rm -rf nginx-${ARCH}.tar.gz
 
 #cd ${DIR}/build
 #wget https://github.com/syncthing/syncthing/archive/v${VERSION}.tar.gz
-https://github.com/syncthing/syncthing/releases/download/v${VERSION}/syncthing-linux-${ARCH}-v${VERSION}.tar.gz
-tar xf syncthing-linux-${ARCH}-v${VERSION}.tar.gz
-mv syncthing-linux-${ARCH}-v${VERSION}/syncthing syncthing
-rm -rf syncthing-linux-${ARCH}-v${VERSION}.tar.gz
-rm -rf syncthing-linux-${ARCH}-v${VERSION}
+wget https://github.com/syncthing/syncthing/releases/download/v${VERSION}/syncthing-linux-${GO_ARCH}-v${VERSION}.tar.gz
+tar xf syncthing-linux-${GO_ARCH}-v${VERSION}.tar.gz
+mv syncthing-linux-${GO_ARCH}-v${VERSION}/syncthing syncthing
+rm -rf syncthing-linux-${GO_ARCH}-v${VERSION}.tar.gz
+rm -rf syncthing-linux-${GO_ARCH}-v${VERSION}
+

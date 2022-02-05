@@ -40,7 +40,7 @@ local build(arch, test_ui) = [{
             name: "download",
             image: "debian:buster-slim",
             commands: [
-                "./download.sh " + version
+                "./download.sh " + version + " " + arch
             ]
         },
         {
