@@ -48,7 +48,7 @@ local build(arch, test_ui) = [{
             image: "debian:buster-slim",
             commands: [
                 "VERSION=$(cat version)",
-                "./package.sh " + name + " $VERSION " + arch
+                "./package.sh " + name + " $VERSION
             ]
         },
         {

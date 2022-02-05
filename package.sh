@@ -2,14 +2,14 @@
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-if [[ -z "$3" ]]; then
-    echo "usage $0 app version arch"
+if [[ -z "$2" ]]; then
+    echo "usage $0 app version"
     exit 1
 fi
 
 NAME=$1
 VERSION=$2
-ARCH=$3
+ARCH=$(dpkg --print-architecture)
 BUILD_DIR=${DIR}/build/app
 
 apt update
