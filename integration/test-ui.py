@@ -3,7 +3,7 @@ from os.path import dirname, join
 from subprocess import check_output
 
 import pytest
-from syncloudlib.integration.hosts import add_host_alias_by_ip
+from syncloudlib.integration.hosts import add_host_alias
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -22,14 +22,13 @@ def module_setup(request, device, artifact_dir, ui_mode):
     request.addfinalizer(module_teardown)
 
 
-def test_start(module_setup, app, domain, device_host):
-    add_host_alias_by_ip(app, domain, device_host)
+def test_start(module_setup, app, device, device_host, domain):
+    add_host_alias(app, device_host, domain)
+    device.run_ssh('date', retries=20)
 
 
-def test_login(driver, app_domain, selenium, device_user, device_password):
-
-    driver.get("https://{0}:{1}@{2}".format(device_user, device_password, app_domain))
-    time.sleep(10)
+def test_login(selenium):
+    selenium.open_app()
     selenium.screenshot('login')
 
 
