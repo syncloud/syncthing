@@ -63,11 +63,10 @@ local build(arch, test_ui) = [{
             image: "python:3.9-buster",
             commands: [
               "apt-get update && apt-get install -y sshpass openssh-client netcat rustc",
+              "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
               "cd integration",
               "pip install -r requirements.txt",
-              "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
-              "DOMAIN=$(cat domain)",
-              "py.test -x -s verify.py --domain=$DOMAIN --app-archive-path=$APP_ARCHIVE_PATH --device-host=device --app=" + name
+              "py.test -x -s verify.py --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
             ]
         }] + ( if test_ui then [
         {
@@ -77,8 +76,7 @@ local build(arch, test_ui) = [{
               "apt-get update && apt-get install -y sshpass openssh-client",
               "cd integration",
               "pip install -r requirements.txt",
-              "DOMAIN=$(cat domain)",
-              "py.test -x -s test-ui.py --ui-mode=desktop --domain=$DOMAIN --device-host=device --app=" + name + " --browser=" + browser,
+              "py.test -x -s test-ui.py --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{
                 name: "shm",
@@ -93,7 +91,7 @@ local build(arch, test_ui) = [{
               "cd integration",
               "pip install -r requirements.txt",
               "DOMAIN=$(cat domain)",
-              "py.test -x -s test-ui.py --ui-mode=mobile --domain=$DOMAIN --device-host=device --app=" + name + " --browser=" + browser,
+              "py.test -x -s test-ui.py --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{
                 name: "shm",
@@ -102,21 +100,22 @@ local build(arch, test_ui) = [{
         }] else [] ) + [
         {
             name: "upload",
-            image: "python:3.9-buster",
+            image: "debian:buster-slim",
             environment: {
                 AWS_ACCESS_KEY_ID: {
                     from_secret: "AWS_ACCESS_KEY_ID"
                 },
                 AWS_SECRET_ACCESS_KEY: {
-                    from_secret: "AWS_SECRET_ACCESS_KEY"
+                     from_secret: "AWS_SECRET_ACCESS_KEY"
                 }
             },
             commands: [
-              "VERSION=$(cat version)",
               "PACKAGE=$(cat package.name)",
-              "pip install syncloud-lib s3cmd",
-              "syncloud-upload.sh " + name + " $DRONE_BRANCH $VERSION $PACKAGE"
-            ],
+               "apt update && apt install -y wget",
+               "wget https://github.com/syncloud/snapd/releases/download/1/syncloud-release-" + arch,
+               "chmod +x syncloud-release-*",
+               "./syncloud-release-* publish -f $PACKAGE -b $DRONE_BRANCH"
+             ],
             when: {
                 branch: ["stable", "master"]
             }
@@ -145,8 +144,8 @@ local build(arch, test_ui) = [{
     ],
     services: [
         {
-            name: "device",
-            image: "syncloud/systemd-" + arch,
+            name: name + ".buster.com",
+            image: "syncloud/platform-buster-" + arch + ":21.10",
             privileged: true,
             volumes: [
                 {
