@@ -62,15 +62,14 @@ def syncthing_session(app_domain, device_user, device_password):
 
 
 def test_start(module_setup, device, device_host, app, log_dir):
-    shutil.rmtree(log_dir, ignore_errors=True)
-    os.mkdir(log_dir)
-    add_host_alias(app, device_host)
-    print(check_output('date', shell=True))
-    device.run_ssh('date', retries=20)
+    def test_start(module_setup, device, app, domain, device_host):
+    add_host_alias(app, device_host, domain)
+    device.run_ssh('date', retries=100, throw=True)
+
 
 
 def test_activate_device(device):
-    response = device.activate()
+    response = device.activate_custom()
     assert response.status_code == 200, response.text
 
 
