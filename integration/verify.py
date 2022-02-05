@@ -74,8 +74,7 @@ def test_activate_device(device):
 
 def test_install(app_archive_path, device_host, device_password, device_session):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_installer(device_session, device_host)
-
+    
 
 def test_wrong_auth(app_domain, device_user):
     session = requests.session()
