@@ -63,7 +63,7 @@ local build(arch, test_ui) = [{
             image: "python:3.9-buster",
             commands: [
               "apt-get update && apt-get install -y sshpass openssh-client netcat rustc",
-              "pip install -r dev_requirements.txt",
+              "pip install -r requirements.txt",
               "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
               "DOMAIN=$(cat domain)",
               "cd integration",
@@ -75,7 +75,7 @@ local build(arch, test_ui) = [{
             image: "python:3.9-buster",
             commands: [
               "apt-get update && apt-get install -y sshpass openssh-client",
-              "pip install -r dev_requirements.txt",
+              "pip install -r requirements.txt",
               "DOMAIN=$(cat domain)",
               "cd integration",
               "py.test -x -s test-ui.py --ui-mode=desktop --domain=$DOMAIN --device-host=device --app=" + name + " --browser=" + browser,
@@ -90,7 +90,7 @@ local build(arch, test_ui) = [{
             image: "python:3.9-buster",
             commands: [
               "apt-get update && apt-get install -y sshpass openssh-client",
-              "pip install -r dev_requirements.txt",
+              "pip install -r requirements.txt",
               "DOMAIN=$(cat domain)",
               "cd integration",
               "py.test -x -s test-ui.py --ui-mode=mobile --domain=$DOMAIN --device-host=device --app=" + name + " --browser=" + browser,
