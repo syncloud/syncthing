@@ -60,7 +60,7 @@ local build(arch, test_ui) = [{
         },
         {
             name: "test-integration",
-            image: "python:3.9-buster",
+            image: "python:3.8-slim-buster",
             commands: [
               "apt-get update && apt-get install -y sshpass openssh-client netcat rustc file libxml2-dev libxslt-dev build-essential libz-dev curl",
               "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
@@ -71,7 +71,7 @@ local build(arch, test_ui) = [{
         }] + ( if test_ui then [
         {
             name: "test-ui-desktop",
-            image: "python:3.9-buster",
+            image: "python:3.8-slim-buster",
             commands: [
               "apt-get update && apt-get install -y sshpass openssh-client",
               "cd integration",
@@ -85,12 +85,11 @@ local build(arch, test_ui) = [{
         },
         {
             name: "test-ui-mobile",
-            image: "python:3.9-buster",
+            image: "python:3.8-slim-buster",
             commands: [
               "apt-get update && apt-get install -y sshpass openssh-client",
               "cd integration",
               "pip install -r requirements.txt",
-              "DOMAIN=$(cat domain)",
               "py.test -x -s test-ui.py --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{

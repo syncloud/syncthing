@@ -24,7 +24,6 @@ def module_setup(request, device, artifact_dir, ui_mode):
 
 def test_start(module_setup, app, device, device_host, domain):
     add_host_alias(app, device_host, domain)
-    device.run_ssh('date', retries=20)
 
 
 def test_login(selenium):
