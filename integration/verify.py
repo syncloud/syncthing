@@ -1,12 +1,11 @@
 import os
-import shutil
 from os.path import dirname, join
 from subprocess import check_output
 
 import pytest
 import requests
 from syncloudlib.integration.hosts import add_host_alias
-from syncloudlib.integration.installer import local_install, wait_for_installer
+from syncloudlib.integration.installer import local_install
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud'
@@ -61,22 +60,18 @@ def syncthing_session(app_domain, device_user, device_password):
     return session
 
 
-def test_start(module_setup, device, device_host, app, log_dir):
-    shutil.rmtree(log_dir, ignore_errors=True)
-    os.mkdir(log_dir)
-    add_host_alias(app, device_host)
-    print(check_output('date', shell=True))
-    device.run_ssh('date', retries=20)
+def test_start(module_setup, device, device_host, app, domain):
+    add_host_alias(app, device_host, domain)
+    device.run_ssh('date', retries=100, throw=True)
 
 
 def test_activate_device(device):
-    response = device.activate()
+    response = device.activate_custom()
     assert response.status_code == 200, response.text
 
 
 def test_install(app_archive_path, device_host, device_password, device_session):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_installer(device_session, device_host)
 
 
 def test_wrong_auth(app_domain, device_user):

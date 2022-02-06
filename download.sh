@@ -3,21 +3,22 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 VERSION=$1
-DOWNLOAD_URL=https://github.com/syncloud/3rdparty/releases/download/1
+GO_ARCH=$2
 ARCH=$(uname -m)
-rm -rf ${DIR}/build
-BUILD_DIR=${DIR}/build
-mkdir -p ${BUILD_DIR}
 
-cd $BUILD_DIR
+apt update
+apt -y install wget
 
-wget -c --progress=dot:giga ${DOWNLOAD_URL}/python3-${ARCH}.tar.gz
-tar xf python3-${ARCH}.tar.gz
-mv python3 python
-
-wget -c --progress=dot:giga ${DOWNLOAD_URL}/nginx-${ARCH}.tar.gz
+cd ${DIR}/build/app
+wget -c --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/nginx/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
+rm -rf nginx-${ARCH}.tar.gz
 
-wget https://github.com/syncthing/syncthing/archive/v${VERSION}.tar.gz
-tar xf v${VERSION}.tar.gz
-mv syncthing-${VERSION} syncthing-src
+#cd ${DIR}/build
+#wget https://github.com/syncthing/syncthing/archive/v${VERSION}.tar.gz
+wget https://github.com/syncthing/syncthing/releases/download/v${VERSION}/syncthing-linux-${GO_ARCH}-v${VERSION}.tar.gz
+tar xf syncthing-linux-${GO_ARCH}-v${VERSION}.tar.gz
+mv syncthing-linux-${GO_ARCH}-v${VERSION}/syncthing syncthing
+rm -rf syncthing-linux-${GO_ARCH}-v${VERSION}.tar.gz
+rm -rf syncthing-linux-${GO_ARCH}-v${VERSION}
+

@@ -1,4 +1,0 @@
-pytest==6.2.4
-selenium==4.0.0.b3
-requests==2.11.1
-syncloud-lib==232
