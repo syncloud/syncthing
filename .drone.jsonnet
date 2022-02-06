@@ -134,6 +134,12 @@ local build(arch, test_ui) = [{
             }
         }
     ],
+     trigger: {
+       event: [
+         "push",
+         "pull_request"
+       ]
+     },
     services: [
         {
             name: name + ".buster.com",
