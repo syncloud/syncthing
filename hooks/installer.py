@@ -1,25 +1,16 @@
-from os.path import dirname, join, abspath, isdir
-from os import listdir
+import logging
 import sys
-
-
-from os import environ
-from os.path import isfile
-import shutil
-import uuid
+from os.path import join
 from subprocess import check_output
 
-import logging
 from syncloudlib import fs, linux, gen, logger
-from syncloudlib.application import paths, urls, storage, users
-
+from syncloudlib.application import paths, storage
 
 APP_NAME = 'syncthing'
 USER_NAME = APP_NAME
 SYNCTHING_PORT = 1085
 
-
-class SyncthingInstaller:
+class Installer:
     def __init__(self):
         if not logger.factory_instance:
             logger.init(logging.DEBUG, True)
@@ -29,6 +20,8 @@ class SyncthingInstaller:
         self.app_data_dir = paths.get_data_dir(APP_NAME)
         
     def install(self):
+
+        check_output('echo 204800 /proc/sys/fs/inotify/max_user_watches', shell=True)
 
         home_folder = join('/home', USER_NAME)
         linux.useradd(USER_NAME, home_folder=home_folder)

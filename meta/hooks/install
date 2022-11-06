@@ -3,5 +3,6 @@
 import os, sys
 sys.path.append(os.path.join(os.environ['SNAP'], 'hooks'))
 
-from syncthing_hooks import SyncthingInstaller
-SyncthingInstaller().install()
+from installer import Installer
+Installer().install()
+

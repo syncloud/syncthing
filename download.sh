@@ -9,7 +9,7 @@ ARCH=$(uname -m)
 apt update
 apt -y install wget
 
-cd ${DIR}/build/app
+cd ${DIR}/build/snap
 wget -c --progress=dot:giga https://github.com/syncloud/3rdparty/releases/download/nginx/nginx-${ARCH}.tar.gz
 tar xf nginx-${ARCH}.tar.gz
 rm -rf nginx-${ARCH}.tar.gz
