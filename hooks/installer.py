@@ -1,5 +1,4 @@
 import logging
-import sys
 from os.path import join
 from subprocess import check_output
 
@@ -9,6 +8,7 @@ from syncloudlib.application import paths, storage
 APP_NAME = 'syncthing'
 USER_NAME = APP_NAME
 SYNCTHING_PORT = 1085
+
 
 class Installer:
     def __init__(self):
