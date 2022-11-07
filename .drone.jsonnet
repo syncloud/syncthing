@@ -271,18 +271,3 @@ local build(arch, test_ui) = [{
 build("amd64", true) +
 build("arm", false) +
 build("arm64", false)
-romote -n " + name + " -a $(dpkg --print-architecture)"
-          ]
-    }
-    ],
-    trigger: {
-        event: [
-          "promote"
-        ]
-    }
-}];
-
-
-build("amd64", true) +
-build("arm", false) +
-build("arm64", false)
