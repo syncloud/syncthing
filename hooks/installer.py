@@ -42,3 +42,6 @@ class Installer:
         fs.makepath(join(self.app_data_dir, 'nginx'))
         
         fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+
+    def post_refresh(self):
+        self.install()
