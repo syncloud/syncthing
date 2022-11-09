@@ -11,6 +11,6 @@ tar xf syncthing-linux-*-v${VERSION}.tar.gz
 
 ls -la
 
-mv syncthing-linux-*-v${VERSION} ${DIR}/build/app/syncthing
+mv syncthing-linux-*-v${VERSION} ${DIR}/build/snap/syncthing
 
-${DIR}/build/app/syncthing --help || true
+${DIR}/build/snap/syncthing --help || true
