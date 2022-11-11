@@ -29,6 +29,7 @@
         <bindDN>cn=%s,ou=users,dc=syncloud,dc=org</bindDN>
     </ldap>
     <options>
+        <unackedNotificationID>authenticationUserAndPassword</unackedNotificationID>
         <listenAddress>default</listenAddress>
         <globalAnnounceServer>default</globalAnnounceServer>
         <globalAnnounceEnabled>false</globalAnnounceEnabled>
