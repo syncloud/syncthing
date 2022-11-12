@@ -29,7 +29,6 @@
         <bindDN>cn=%s,ou=users,dc=syncloud,dc=org</bindDN>
     </ldap>
     <options>
-        <unackedNotificationID>authenticationUserAndPassword</unackedNotificationID>
         <listenAddress>default</listenAddress>
         <globalAnnounceServer>default</globalAnnounceServer>
         <globalAnnounceEnabled>false</globalAnnounceEnabled>
@@ -76,7 +75,7 @@
         <defaultFolderPath>~</defaultFolderPath>
         <minHomeDiskFreePct>0</minHomeDiskFreePct>
         <setLowPriority>true</setLowPriority>
-        <UnackedNotificationIDs></UnackedNotificationIDs>
+        <UnackedNotificationIDs>crAutoEnabled</UnackedNotificationIDs>
         <crashReportingURL>https://localhost/newcrash</crashReportingURL>
         <crashReportingEnabled>false</crashReportingEnabled>
     </options>
