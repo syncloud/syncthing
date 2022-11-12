@@ -35,7 +35,8 @@ def test_login(selenium, app_domain, device_user, device_password):
     selenium.screenshot('index')
     passwordWarnings = selenium.driver.find_elements(By.XPATH, "//span[text()='GUI Authentication: Set User and Password']")
     assert len(passwordWarnings) == 0
-    
+    crashReportWarnings = selenium.driver.find_elements(By.XPATH, "//span[text()='Automatic Crash Reporting']")
+    assert len(crashReportWarnings) == 0
 
 
 def test_teardown(driver):
