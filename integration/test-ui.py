@@ -31,7 +31,7 @@ def test_login(selenium, app_domain, device_user, device_password):
     selenium.driver.get("https://{0}:{1}@{2}".format(device_user, device_password, app_domain))
 
     selenium.find_by_xpath("//h3[text()='This Device']")
-    timw.sleep(20)
+    time.sleep(20)
     selenium.screenshot('index')
     passwordWarnings = selenium.driver.find_elements(By.XPATH, "//span[text()='GUI Authentication: Set User and Password']")
     assert len(passwordWarnings) == 0
