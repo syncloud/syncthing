@@ -77,6 +77,7 @@
         <minHomeDiskFreePct>0</minHomeDiskFreePct>
         <setLowPriority>true</setLowPriority>
         <UnackedNotificationIDs></UnackedNotificationIDs>
+        <crashReportingURL>https://localhost/newcrash</crashReportingURL>
         <crashReportingEnabled>false</crashReportingEnabled>
     </options>
 </configuration>
