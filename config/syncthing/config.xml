@@ -77,6 +77,7 @@
         <setLowPriority>true</setLowPriority>
         <UnackedNotificationIDs>crAutoEnabled</UnackedNotificationIDs>
         <crashReportingURL>https://localhost/newcrash</crashReportingURL>
-        <crashReportingEnabled>false</crashReportingEnabled>
+        <crashReportingEnabled>true</crashReportingEnabled>
     </options>
 </configuration>
+
