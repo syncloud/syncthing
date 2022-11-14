@@ -1,4 +1,4 @@
-<configuration version="28">
+<configuration version="37">
     <folder id="zj2AA-q55a7" label="Default Folder" path="/data/syncthing" type="sendreceive" rescanIntervalS="60"
             fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
@@ -80,6 +80,4 @@
         <unackedNotificationID></unackedNotificationID>
         <crashReportingEnabled>false</crashReportingEnabled>
     </options>
-</configuration>
-ptions>
 </configuration>

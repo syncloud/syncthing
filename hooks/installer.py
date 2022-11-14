@@ -47,3 +47,4 @@ class Installer:
 
     def post_refresh(self):
         #self.install()
+        pass
