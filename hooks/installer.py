@@ -17,11 +17,11 @@ class Installer:
 
         self.log = logger.get_logger('{0}_installer'.format(APP_NAME))
         self.app_dir = paths.get_app_dir(APP_NAME)
-        self.app_data_dir = paths.get_data_dir(APP_NAME)
+        self.common_dir = paths.get_data_dir(APP_NAME)
+        self.data_dir = join('/var/snap', APP_NAME, 'current')
+        
         
     def install(self):
-
-        check_output('echo 204800 /proc/sys/fs/inotify/max_user_watches', shell=True)
 
         home_folder = join('/home', USER_NAME)
         linux.useradd(USER_NAME, home_folder=home_folder)
@@ -29,19 +29,21 @@ class Installer:
         storage.init_storage(APP_NAME, USER_NAME)
 
         templates_path = join(self.app_dir, 'config')
-        config_path = join(self.app_data_dir, 'config')
+        config_path = join(self.data_dir, 'config')
 
         variables = {
             'app_dir': self.app_dir,
-            'app_data_dir': self.app_data_dir,
+            'data_dir': self.data_dir,
+            'common_dir': self.common_dir,
             'syncthing_port': SYNCTHING_PORT
         }
         gen.generate_files(templates_path, config_path, variables)
 
-        fs.makepath(join(self.app_data_dir, 'log'))
-        fs.makepath(join(self.app_data_dir, 'nginx'))
+        fs.makepath(join(self.common_dir, 'log'))
+        fs.makepath(join(self.common_dir, 'nginx'))
         
-        fs.chownpath(self.app_data_dir, USER_NAME, recursive=True)
+        fs.chownpath(self.data_dir, USER_NAME, recursive=True)
+        fs.chownpath(self.common_dir, USER_NAME, recursive=True)
 
     def post_refresh(self):
-        self.install()
+        #self.install()
