@@ -75,9 +75,11 @@
         <defaultFolderPath>~</defaultFolderPath>
         <minHomeDiskFreePct>0</minHomeDiskFreePct>
         <setLowPriority>true</setLowPriority>
-        <UnackedNotificationIDs>crAutoEnabled</UnackedNotificationIDs>
+        <UnackedNotificationIDs></UnackedNotificationIDs>
         <crashReportingURL>https://localhost/newcrash</crashReportingURL>
-        <unackedNotificationID>crAutoEnabled</unackedNotificationID>
-        <crashReportingEnabled>true</crashReportingEnabled>
+        <unackedNotificationID></unackedNotificationID>
+        <crashReportingEnabled>false</crashReportingEnabled>
     </options>
+</configuration>
+ptions>
 </configuration>
