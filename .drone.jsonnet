@@ -1,6 +1,6 @@
 local name = "syncthing";
 local browser = "firefox";
-local version = "1.22.2-rc.2";
+local version = "1.22.1";
 
 local build(arch, test_ui) = [{
     kind: "pipeline",
