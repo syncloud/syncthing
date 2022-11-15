@@ -1,5 +1,5 @@
-<configuration version="28">
-    <folder id="zj2AA-q55a7" label="Default Folder" path="/data/syncthing" type="sendreceive" rescanIntervalS="60"
+<configuration version="37">
+    <folder id="data" label="Data" path="/data" type="send" rescanIntervalS="60"
             fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <minDiskFree unit="%">1</minDiskFree>
@@ -20,7 +20,7 @@
     </folder>
     <gui enabled="true" tls="false" debugging="false">
         <address>0.0.0.0:{{ syncthing_port }}</address>
-        <apikey>k1dnz1Dd0rzTBjjFFh7CXPnrF12C49B1</apikey>
+        <apikey></apikey>
         <theme>default</theme>
         <authMode>ldap</authMode>
     </gui>
@@ -76,5 +76,8 @@
         <minHomeDiskFreePct>0</minHomeDiskFreePct>
         <setLowPriority>true</setLowPriority>
         <UnackedNotificationIDs></UnackedNotificationIDs>
+        <crashReportingURL>https://localhost/newcrash</crashReportingURL>
+        <unackedNotificationID></unackedNotificationID>
+        <crashReportingEnabled>false</crashReportingEnabled>
     </options>
 </configuration>

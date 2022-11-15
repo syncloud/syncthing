@@ -1,6 +1,6 @@
 local name = "syncthing";
 local browser = "firefox";
-local version = "1.19.0";
+local version = "1.22.1";
 
 local build(arch, test_ui) = [{
     kind: "pipeline",
@@ -59,7 +59,7 @@ local build(arch, test_ui) = [{
               "cd integration",
               "./deps.sh",
               "pip install -r requirements.txt",
-              "py.test -x -s verify.py --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
+              "py.test -x -s verify.py --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
             ]
         }] + ( if test_ui then [
     {
@@ -87,7 +87,7 @@ local build(arch, test_ui) = [{
               "cd integration",
               "./deps.sh",
               "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+              "py.test -x -s test-ui.py --distro=buster --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{
                 name: "shm",
@@ -101,7 +101,7 @@ local build(arch, test_ui) = [{
               "cd integration",
               "./deps.sh",
               "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+              "py.test -x -s test-ui.py --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{
                 name: "shm",
