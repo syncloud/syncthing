@@ -12,7 +12,7 @@ apps:
   nginx:
     command: bin/service.nginx.sh start
     user: syncthing
-    daemon: simple
+    daemon: forking
     plugs:
     - network
     - network-bind
