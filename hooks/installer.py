@@ -50,8 +50,8 @@ class Installer:
         self.fix_config_permission()
 
     def migrate_config_file(self):
-        old_config = join(self.common_dir, 'config', 'syncthing')
-        new_config = join(self.data_dir, 'config', 'syncthing')
+        old_config = join(self.common_dir, 'config')
+        new_config = join(self.data_dir, 'config')
         if not isdir(new_config):
             shutil.copytree(old_config, new_config)
 
