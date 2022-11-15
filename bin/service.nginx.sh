@@ -15,7 +15,7 @@ start)
     /bin/rm -f /var/snap/syncthing/common/web.socket
     ${DIR}/nginx/sbin/nginx -t -c /var/snap/syncthing/current/config/nginx.conf -p ${DIR}/nginx -g 'error_log /var/snap/syncthing/common/log/nginx_error.log warn;'
     timeout 60 /bin/bash -c 'until echo > /dev/tcp/localhost/'$SYNCTHING_PORT'; do sleep 10; done'
-    exec ${DIR}/nginx/sbin/nginx -c /var/snap/syncthing/current/config/nginx.conf -p ${DIR}/nginx -g 'error_log /var/snap/syncthing/commom/log/nginx_error.log warn;'
+    exec ${DIR}/nginx/sbin/nginx -c /var/snap/syncthing/current/config/nginx.conf -p ${DIR}/nginx -g 'error_log /var/snap/syncthing/common/log/nginx_error.log warn;'
     ;;
 reload)
     ${DIR}/nginx/sbin/nginx -c /var/snap/syncthing/current/config/nginx.conf -s reload -p ${DIR}/nginx
