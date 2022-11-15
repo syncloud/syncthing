@@ -1,5 +1,6 @@
 import logging
-from os.path import join
+import shutil
+from os.path import join, isdir
 from subprocess import check_output
 
 from syncloudlib import fs, linux, gen, logger
@@ -42,9 +43,19 @@ class Installer:
         fs.makepath(join(self.common_dir, 'log'))
         fs.makepath(join(self.common_dir, 'nginx'))
         
+        self.fix_config_permission()
+
+    def post_refresh(self):
+        self.migrate_config_file()
+        self.fix_config_permission()
+
+    def migrate_config_file(self):
+        old_config = join(self.common_dir, 'config', 'syncthing')
+        new_config = join(self.data_dir, 'config', 'syncthing')
+        if not isdir(new_config):
+            shutil.copytree(old_config, new_config)
+
+    def fix_config_permission(self):
         fs.chownpath(self.data_dir, USER_NAME, recursive=True)
         fs.chownpath(self.common_dir, USER_NAME, recursive=True)
 
-    def post_refresh(self):
-        #self.install()
-        pass
