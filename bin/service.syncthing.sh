@@ -9,7 +9,8 @@ fi
 
 case $1 in
 start)
-    exec ${DIR}/syncthing -home ${SNAP_COMMON}/config/syncthing
+    echo 204800 /proc/sys/fs/inotify/max_user_watches
+    exec ${DIR}/syncthing -home /var/snap/syncthing/current/config/syncthing
     ;;
 *)
     echo "not valid command"
