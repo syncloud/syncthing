@@ -1,11 +1,14 @@
 <configuration version="37">
-    <folder id="data" label="Data" path="/data" type="send" rescanIntervalS="60"
-            fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="data" label="Data" path="/data" type="sendonly" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <minDiskFree unit="%">1</minDiskFree>
-        <versioning></versioning>
+        <versioning>
+            <cleanupIntervalS>3600</cleanupIntervalS>
+            <fsPath></fsPath>
+            <fsType>basic</fsType>
+        </versioning>
         <copiers>0</copiers>
-        <pullers>0</pullers>
+        <pullerMaxPendingKiB>0</pullerMaxPendingKiB>
         <hashers>0</hashers>
         <order>random</order>
         <ignoreDelete>false</ignoreDelete>
@@ -17,6 +20,22 @@
         <paused>false</paused>
         <weakHashThresholdPct>25</weakHashThresholdPct>
         <markerName>.stfolder</markerName>
+        <copyOwnershipFromParent>false</copyOwnershipFromParent>
+        <modTimeWindowS>0</modTimeWindowS>
+        <maxConcurrentWrites>2</maxConcurrentWrites>
+        <disableFsync>false</disableFsync>
+        <blockPullOrder>standard</blockPullOrder>
+	<copyRangeMethod>standard</copyRangeMethod>
+	<caseSensitiveFS>true</caseSensitiveFS>
+        <junctionsAsDirs>false</junctionsAsDirs>
+        <syncOwnership>false</syncOwnership>
+        <sendOwnership>false</sendOwnership>
+        <syncXattrs>false</syncXattrs>
+        <sendXattrs>false</sendXattrs>
+        <xattrFilter>
+            <maxSingleEntrySize>0</maxSingleEntrySize>
+            <maxTotalSize>0</maxTotalSize>
+        </xattrFilter>
     </folder>
     <gui enabled="true" tls="false" debugging="false">
         <address>0.0.0.0:{{ syncthing_port }}</address>
