@@ -9,7 +9,7 @@ fi
 
 case $1 in
 start)
-    echo 204800 /proc/sys/fs/inotify/max_user_watches
+    sysctl -w fs.inotify.max_user_watches=204800
     exec ${DIR}/syncthing -home /var/snap/syncthing/current/config/syncthing
     ;;
 *)
