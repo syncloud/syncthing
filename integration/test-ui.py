@@ -28,16 +28,17 @@ def test_start(module_setup, app, device, device_host, domain):
 
 
 def test_login(selenium, app_domain, device_user, device_password):
-    selenium.driver.get("https://{0}:{1}@{2}".format(device_user, device_password, app_domain))
+    selenium.open_app()
 
-    selenium.find_by_xpath("//h3[text()='This Device']")
-    time.sleep(20)
-    selenium.screenshot('index')
+    selenium.find_by_id("user").send_keys(device_user)
+    selenium.find_by_id("password").send_keys(device_password)
+    selenium.screenshot('logon')
+    selenium.find_by_xpath("//button[@type='submit']").click()
     passwordWarnings = selenium.driver.find_elements(By.XPATH, "//span[text()='GUI Authentication: Set User and Password']")
     assert len(passwordWarnings) == 0
     crashReportWarnings = selenium.driver.find_elements(By.XPATH, "//span[text()='Automatic Crash Reporting']")
     assert len(crashReportWarnings) == 0
-
+    selenium.screenshot('index')
 
 def test_teardown(driver):
     driver.quit()
