@@ -2,7 +2,7 @@ local name = "syncthing";
 local browser = "firefox";
 local version = "1.26.0";
 
-local build(arch, test_ui) = [{
+local build(arch, test_ui, dind) = [{
     kind: "pipeline",
     type: "docker",
     name: arch,
@@ -21,18 +21,14 @@ local build(arch, test_ui) = [{
         },
         {
             name: "build python",
-            image: "debian:buster-slim",
+            image: "docker:" + dind,
             commands: [
                 "./python/build.sh"
             ],
             volumes: [
                 {
-                    name: "docker",
-                    path: "/usr/bin/docker"
-                },
-                {
-                    name: "docker.sock",
-                    path: "/var/run/docker.sock"
+                    name: "dockersock",
+                    path: "/var/run"
                 }
             ]
         },
@@ -174,6 +170,18 @@ local build(arch, test_ui) = [{
        ]
      },
     services: [
+    {
+            name: "docker",
+            image: "docker:" + dind,
+            privileged: true,
+            volumes: [
+                {
+                    name: "dockersock",
+                    path: "/var/run"
+                }
+            ]
+        },
+  
         {
             name: name + ".buster.com",
             image: "syncloud/platform-buster-" + arch + ":21.10",
@@ -215,18 +223,10 @@ local build(arch, test_ui) = [{
             temp: {}
         },
         {
-            name: "docker",
-            host: {
-                path: "/usr/bin/docker"
-            }
+            name: "dockersock",
+            temp: {}
         },
         {
-            name: "docker.sock",
-            host: {
-                path: "/var/run/docker.sock"
-            }
-        },
-      {
             name: "videos",
             temp: {}
         },
@@ -268,6 +268,6 @@ local build(arch, test_ui) = [{
 }];
 
 
-build("amd64", true) +
-build("arm", false) +
-build("arm64", false)
+build("amd64", true, "20.10.21-dind") +
+build("arm", false, "19.03.8-dind") +
+build("arm64", false, "20.10.21-dind")
