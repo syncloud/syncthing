@@ -25,8 +25,8 @@
         <maxConcurrentWrites>2</maxConcurrentWrites>
         <disableFsync>false</disableFsync>
         <blockPullOrder>standard</blockPullOrder>
-	<copyRangeMethod>standard</copyRangeMethod>
-	<caseSensitiveFS>true</caseSensitiveFS>
+       	<copyRangeMethod>standard</copyRangeMethod>
+	       <caseSensitiveFS>true</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
         <syncOwnership>false</syncOwnership>
         <sendOwnership>false</sendOwnership>
@@ -37,6 +37,9 @@
             <maxTotalSize>0</maxTotalSize>
         </xattrFilter>
     </folder>
+    <ignores>
+        <line>/</line>
+    </ignores>
     <gui enabled="true" tls="false" debugging="false">
         <address>0.0.0.0:{{ syncthing_port }}</address>
         <apikey></apikey>
