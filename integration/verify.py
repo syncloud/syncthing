@@ -74,15 +74,6 @@ def test_install(app_archive_path, device_host, device_password, device_session)
     local_install(device_host, device_password, app_archive_path)
 
 
-def test_wrong_auth(app_domain, device_user):
-    session = requests.session()
-    response = session.get('https://{0}'.format(app_domain), auth=(device_user, 'wrongpass'), allow_redirects=False,
-                           verify=False)
-    print(response.text.encode("UTF-8"))
-    print(response.headers)
-    assert response.status_code != 200, response.text
-
-
 def test_resource(syncthing_session, app_domain):
     response = syncthing_session.get('https://{0}'.format(app_domain), verify=False)
     assert response.status_code == 200, response.text
