@@ -4,6 +4,11 @@ DIR=$( cd "$( dirname "$0" )" && pwd )
 cd ${DIR}
 
 BUILD_DIR=${DIR}/../build/snap/python
+while ! docker ps ; do
+  sleep 1
+  echo "retry docker"
+done
+
 docker ps -a -q --filter ancestor=python:syncloud --format="{{.ID}}" | xargs docker stop | xargs docker rm || true
 docker rmi python:syncloud || true
 docker build -t python:syncloud .
