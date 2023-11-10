@@ -1,10 +1,9 @@
-import time
 from os.path import dirname, join
 from subprocess import check_output
 
 import pytest
-from syncloudlib.integration.hosts import add_host_alias
 from selenium.webdriver.common.by import By
+from syncloudlib.integration.hosts import add_host_alias
 
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud/ui'
@@ -23,22 +22,22 @@ def module_setup(request, device, artifact_dir, ui_mode):
     request.addfinalizer(module_teardown)
 
 
-def test_start(module_setup, app, device, device_host, domain):
+def test_start(module_setup, app, device_host, domain):
     add_host_alias(app, device_host, domain)
 
 
-def test_login(selenium, app_domain, device_user, device_password):
+def test_login(selenium, device_user, device_password):
     selenium.open_app()
 
     selenium.find_by_id("user").send_keys(device_user)
     selenium.find_by_id("password").send_keys(device_password)
-    selenium.screenshot('logon')
+    selenium.screenshot('login')
     selenium.find_by_xpath("//button[@type='submit']").click()
-    passwordWarnings = selenium.driver.find_elements(By.XPATH, "//span[text()='GUI Authentication: Set User and Password']")
-    assert len(passwordWarnings) == 0
-    crashReportWarnings = selenium.driver.find_elements(By.XPATH, "//span[text()='Automatic Crash Reporting']")
-    assert len(crashReportWarnings) == 0
+    assert not selenium.exists_by(By.XPATH, "//span[text()='GUI Authentication: Set User and Password']")
+    assert not selenium.exists_by(By.XPATH, "//span[text()='Automatic Crash Reporting']")
+    selenium.find_by(By.XPATH, "//h3[text()='This Device']")
     selenium.screenshot('index')
+
 
 def test_teardown(driver):
     driver.quit()
