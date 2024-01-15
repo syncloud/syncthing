@@ -10,7 +10,7 @@ apps:
     before: [nginx]
   
   nginx:
-    command: bin/service.nginx.sh start
+    command: bin/service.nginx.sh
     user: syncthing
     daemon: forking
     plugs:
@@ -18,7 +18,6 @@ apps:
     - network-bind
     restart-condition: always
     start-timeout: 600s
-    stop-command: bin/service.nginx.sh stop
     after: [syncthing]
 
 confinement: strict
