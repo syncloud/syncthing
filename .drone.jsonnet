@@ -1,6 +1,6 @@
 local name = "syncthing";
 local browser = "firefox";
-local version = "1.27.12";
+local version = "1.28.0";
 local deployer = "https://github.com/syncloud/store/releases/download/4/syncloud-release";
 
 local build(arch, test_ui, dind) = [{
