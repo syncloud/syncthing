@@ -1,7 +1,13 @@
 local name = "syncthing";
+local version = "1.29.5";
+
 local browser = "firefox";
-local version = "1.29.2";
+local selenium = '4.21.0-20240517';
+local platform = '25.02';
 local deployer = "https://github.com/syncloud/store/releases/download/4/syncloud-release";
+local python = '3.9-slim-buster';
+local distro_default = 'buster';
+local distros = ['bookworm', 'buster'];
 
 local build(arch, test_ui, dind) = [{
     kind: "pipeline",
@@ -47,21 +53,44 @@ local build(arch, test_ui, dind) = [{
                 "VERSION=$(cat version)",
                 "./package.sh " + name + " $VERSION"
             ]
-        },
-        {
-            name: "test-integration",
-            image: "python:3.8-slim-buster",
+        }
+        ] + [
+           {
+             name: 'test ' + distro,
+             image: 'python:' + python,
+             commands: [
+               'APP_ARCHIVE_PATH=$(realpath $(cat package.name))',
+               'cd test',
+               './deps.sh',
+               'py.test -x -s test.py --distro=' + distro + ' --domain=' + distro + '.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=' + name + '.' + distro + '.com --app=' + name + ' --arch=' + arch,
+             ],
+           }
+           for distro in distros
+       ] + ( if test_ui then [
+       {
+            name: "selenium",
+            image: "selenium/standalone-" + browser + ":" + selenium,
+            detach: true,
+            environment: {
+                SE_NODE_SESSION_TIMEOUT: "999999",
+                START_XVFB: "true"
+            },
+               volumes: [{
+                name: "shm",
+                path: "/dev/shm"
+            }],
             commands: [
-              "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
-              "cd integration",
-              "./deps.sh",
-              "pip install -r requirements.txt",
-              "py.test -x -s verify.py --distro=buster --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name
-            ]
-        }] + ( if test_ui then [
+                                     'cat /etc/hosts',
+                                     'DOMAIN="' + distro_default + '.com"',
+                                     'APP_DOMAIN="' + name + '.' + distro_default + '.com"',
+                                     'getent hosts $APP_DOMAIN | sed "s/$APP_DOMAIN/auth.$DOMAIN/g" | sudo tee -a /etc/hosts',
+                                     'cat /etc/hosts',
+                                     '/opt/bin/entry_point.sh',
+                                   ],
+         },
     {
         name: "selenium-video",
-        image: "selenium/video:ffmpeg-4.3.1-20220208",
+        image: "selenium/video:ffmpeg-6.1.1-20240517",
         detach: true,
         environment: {
             DISPLAY_CONTAINER_NAME: "selenium",
@@ -78,27 +107,12 @@ local build(arch, test_ui, dind) = [{
             }
         ]
     },        {
-            name: "test-ui-desktop",
-            image: "python:3.8-slim-buster",
+            name: "test-ui",
+            image: "python:" + python,
             commands: [
-              "cd integration",
+              "cd test",
               "./deps.sh",
-              "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --distro=buster --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
-            ],
-            volumes: [{
-                name: "shm",
-                path: "/dev/shm"
-            }]
-        },
-        {
-            name: "test-ui-mobile",
-            image: "python:3.8-slim-buster",
-            commands: [
-              "cd integration",
-              "./deps.sh",
-              "pip install -r requirements.txt",
-              "py.test -x -s test-ui.py --distro=buster --ui-mode=mobile --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+              "py.test -x -s ui.py --distro=buster --ui-mode=desktop --domain=buster.com --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
             ],
             volumes: [{
                 name: "shm",
@@ -107,12 +121,12 @@ local build(arch, test_ui, dind) = [{
         }] else [] ) + [
 {
         name: "test-upgrade",
-        image: "python:3.8-slim-buster",
+        image: "python:" + python,
         commands: [
           "APP_ARCHIVE_PATH=$(realpath $(cat package.name))",
-          "cd integration",
+          "cd test",
           "./deps.sh",
-          "py.test -x -s test-upgrade.py --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
+          "py.test -x -s upgrade.py --distro=buster --ui-mode=desktop --domain=buster.com --app-archive-path=$APP_ARCHIVE_PATH --device-host=" + name + ".buster.com --app=" + name + " --browser=" + browser,
         ],
         privileged: true,
         volumes: [{
@@ -209,31 +223,26 @@ local build(arch, test_ui, dind) = [{
                     path: "/var/run"
                 }
             ]
-        },
-  
-        {
-            name: name + ".buster.com",
-            image: "syncloud/platform-buster-" + arch + ":21.10",
-            privileged: true,
-            volumes: [
-                {
-                    name: "dbus",
-                    path: "/var/run/dbus"
-                },
-                {
-                    name: "dev",
-                    path: "/dev"
-                }
-            ]
         }
-    ] + if test_ui then [{
-            name: "selenium",
-            image: "selenium/standalone-" + browser + ":4.0.0-beta-3-prerelease-20210402",
-            volumes: [{
-                name: "shm",
-                path: "/dev/shm"
-            }]
-        }] else [],
+  
+    ] + [
+    {
+      name: name + '.' + distro + '.com',
+      image: 'syncloud/platform-' + distro + '-' + arch + ':' + platform,
+      privileged: true,
+      volumes: [
+        {
+          name: 'dbus',
+          path: '/var/run/dbus',
+        },
+        {
+          name: 'dev',
+          path: '/dev',
+        },
+      ],
+    }
+    for distro in distros
+    ],
     volumes: [
         {
             name: "dbus",
