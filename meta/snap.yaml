@@ -21,7 +21,7 @@ apps:
     after: [syncthing]
 
 confinement: strict
-description: Syncthing
+description: Continuous File Synchronization
 grade: stable
 name: syncthing
 summary: Syncthing
