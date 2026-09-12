@@ -116,9 +116,6 @@ func (i *Installer) PreRefresh() error {
 
 func (i *Installer) PostRefresh() error {
 	i.TuneInotify()
-	if err := i.MigrateCommonHome(); err != nil {
-		return err
-	}
 	if err := i.UpdateConfigs(); err != nil {
 		return err
 	}
@@ -129,20 +126,6 @@ func (i *Installer) PostRefresh() error {
 		return err
 	}
 	return i.FixPermissions()
-}
-
-func (i *Installer) MigrateCommonHome() error {
-	oldConfig := path.Join(i.commonDir, "config")
-
-	if _, err := os.Stat(i.configDir); err == nil {
-		return nil
-	}
-	if _, err := os.Stat(oldConfig); os.IsNotExist(err) {
-		return nil
-	}
-
-	i.logger.Info("migrating config", zap.String("from", oldConfig), zap.String("to", i.configDir))
-	return cp.Copy(oldConfig, i.configDir)
 }
 
 func (i *Installer) TuneInotify() {

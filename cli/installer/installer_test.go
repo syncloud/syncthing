@@ -50,36 +50,3 @@ func TestInitHomeKeepsExistingConfig(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "user config", string(body))
 }
-
-func TestMigrateCommonHomeSkipsWhenDataConfigExists(t *testing.T) {
-	dataDir := t.TempDir()
-	commonDir := t.TempDir()
-	configDir := path.Join(dataDir, "config")
-
-	assert.NoError(t, os.MkdirAll(configDir, 0755))
-	assert.NoError(t, os.MkdirAll(path.Join(commonDir, "config"), 0755))
-	assert.NoError(t, os.WriteFile(path.Join(commonDir, "config", "config.xml"), []byte("old"), 0644))
-
-	i := &Installer{dataDir: dataDir, commonDir: commonDir, configDir: configDir, logger: testLogger()}
-	assert.NoError(t, i.MigrateCommonHome())
-
-	_, err := os.Stat(path.Join(configDir, "config.xml"))
-	assert.True(t, os.IsNotExist(err))
-}
-
-func TestMigrateCommonHomeCopiesLegacyLayout(t *testing.T) {
-	dataDir := t.TempDir()
-	commonDir := t.TempDir()
-	configDir := path.Join(dataDir, "config")
-
-	legacy := path.Join(commonDir, "config", App)
-	assert.NoError(t, os.MkdirAll(legacy, 0755))
-	assert.NoError(t, os.WriteFile(path.Join(legacy, "config.xml"), []byte("legacy"), 0644))
-
-	i := &Installer{dataDir: dataDir, commonDir: commonDir, configDir: configDir, logger: testLogger()}
-	assert.NoError(t, i.MigrateCommonHome())
-
-	body, err := os.ReadFile(path.Join(configDir, App, "config.xml"))
-	assert.NoError(t, err)
-	assert.Equal(t, "legacy", string(body))
-}
