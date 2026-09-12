@@ -4,6 +4,7 @@ from subprocess import check_output
 
 import pytest
 import requests
+from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
@@ -21,12 +22,15 @@ def module_setup(request, device, data_dir, platform_data_dir, app_dir, artifact
 
         device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la {0} > {1}/app.data.ls.log'.format(data_dir, TMP_DIR), throw=False)
-        device.run_ssh('ls -la {0}/syncthing/config > {1}/config.ls.log'.format(data_dir, TMP_DIR), throw=False)
-        device.run_ssh('{0}/syncthing/syncthing --help > {1}/syncthing.help.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
-        device.run_ssh('{0}/syncthing/syncthing -version > {1}/syncthing.version.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
+        device.run_ssh('ls -la {0}/config/syncthing > {1}/config.ls.log'.format(snap_data_dir, TMP_DIR), throw=False)
+        device.run_ssh('{0}/syncthing --version > {1}/syncthing.version.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
         device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR), throw=False)
         device.run_ssh('systemctl status snap.syncthing.syncthing > {0}/syncthing.status.log'.format(TMP_DIR), throw=False)
+        print(device.run_ssh('systemctl --no-pager --full status snap.syncthing.syncthing snap.syncthing.nginx', throw=False))
+        print(device.run_ssh('journalctl --no-pager -u snap.syncthing.syncthing -n 60', throw=False))
+        print(device.run_ssh('journalctl --no-pager -u snap.syncthing.nginx -n 60', throw=False))
+        print(device.run_ssh('ls -la /var/snap/syncthing/current /var/snap/syncthing/common', throw=False))
         device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR), throw=False)
         device.run_ssh('journalctl | tail -500 > {0}/journalctl.log'.format(TMP_DIR), throw=False)
         device.run_ssh('tail -500 /var/log/syslog > {0}/syslog.log'.format(TMP_DIR), throw=False)
@@ -36,14 +40,12 @@ def module_setup(request, device, data_dir, platform_data_dir, app_dir, artifact
         device.run_ssh('ls -la /var/snap > {0}/var.snap.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /var/snap/syncthing > {0}/var.snap.syncthing.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /var/snap/syncthing/common > {0}/var.snap.syncthing.common.ls.log'.format(TMP_DIR), throw=False)
-        device.run_ssh('ls -la /var/snap/syncthing/common/config > {0}/var.snap.syncthing.common.config.ls.log'.format(TMP_DIR), throw=False)
-        device.run_ssh('ls -la /var/snap/syncthing/common/config/syncthing > {0}/var.snap.syncthing.common.config.syncthing.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /var/snap/syncthing/current/config/syncthing > {0}/home.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /data > {0}/data.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /data/syncthing > {0}/data.syncthing.ls.log'.format(TMP_DIR), throw=False)
 
         app_log_dir = join(artifact_dir, 'log')
         os.mkdir(app_log_dir)
-        device.scp_from_device('{0}/log/*.log'.format(data_dir), app_log_dir, throw=False)
         device.scp_from_device('{0}/*.log'.format(TMP_DIR), app_log_dir, throw=False)
         check_output('chmod -R a+r {0}'.format(artifact_dir), shell=True)
 
@@ -60,9 +62,10 @@ def syncthing_session(app_domain, device_user, device_password):
     return session
 
 
-def test_start(module_setup, device, device_host, app, domain):
+def test_start(module_setup, device, device_host, app, domain, settle):
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=100, throw=True)
+    settle(device)
 
 
 def test_activate_device(device):
@@ -70,8 +73,9 @@ def test_activate_device(device):
     assert response.status_code == 200, response.text
 
 
-def test_install(app_archive_path, device_host, device_password, device_session):
+def test_install(app_archive_path, device_host, device_password, device_session, app_domain):
     local_install(device_host, device_password, app_archive_path)
+    wait_for_rest(requests.session(), 'https://{0}'.format(app_domain), 200, 100)
 
 
 def test_resource(syncthing_session, app_domain):
@@ -84,5 +88,6 @@ def test_remove(device, app):
     assert response.status_code == 200, response.text
 
 
-def test_reinstall(app_archive_path, device_host, device_password):
+def test_reinstall(app_archive_path, device_host, device_password, app_domain):
     local_install(device_host, device_password, app_archive_path)
+    wait_for_rest(requests.session(), 'https://{0}'.format(app_domain), 200, 100)
