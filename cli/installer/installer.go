@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path"
-	"strconv"
 
 	cp "github.com/otiai10/copy"
 	"github.com/syncloud/golib/config"
@@ -13,12 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const (
-	App            = "syncthing"
-	InotifyWatches = 204800
-	inotifySysctl  = "/proc/sys/fs/inotify/max_user_watches"
-	inotifyDropIn  = "/etc/sysctl.d/30-syncthing-inotify.conf"
-)
+const App = "syncthing"
 
 type Variables struct {
 	App       string
@@ -65,7 +59,6 @@ func (i *Installer) Install() error {
 	if err := linux.CreateUser(App); err != nil {
 		return err
 	}
-	i.TuneInotify()
 	if err := i.UpdateConfigs(); err != nil {
 		return err
 	}
@@ -115,7 +108,6 @@ func (i *Installer) PreRefresh() error {
 }
 
 func (i *Installer) PostRefresh() error {
-	i.TuneInotify()
 	if err := i.UpdateConfigs(); err != nil {
 		return err
 	}
@@ -126,16 +118,6 @@ func (i *Installer) PostRefresh() error {
 		return err
 	}
 	return i.FixPermissions()
-}
-
-func (i *Installer) TuneInotify() {
-	value := strconv.Itoa(InotifyWatches)
-	if err := os.WriteFile(inotifyDropIn, []byte("fs.inotify.max_user_watches="+value+"\n"), 0644); err != nil {
-		i.logger.Warn("cannot persist inotify limit", zap.String("file", inotifyDropIn), zap.Error(err))
-	}
-	if err := os.WriteFile(inotifySysctl, []byte(value), 0644); err != nil {
-		i.logger.Warn("cannot apply inotify limit", zap.String("file", inotifySysctl), zap.Error(err))
-	}
 }
 
 func (i *Installer) StorageChange() error {
