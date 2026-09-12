@@ -21,10 +21,13 @@ async function dump(page: Page, label: string) {
       .catch((err) => `evaluate failed: ${String(err)}`)
     console.log(`[${label}] ${path} -> ${result}`)
   }
-  console.log(`[${label}] #user count=${await page.locator('#user').count()}`)
-  console.log(`[${label}] #submit count=${await page.locator('#submit').count()}`)
+  console.log(`[${label}] login form count=${await loginForm(page).count()}`)
   const html = await page.content().catch(() => '')
   console.log(`[${label}] html=\n${html.slice(0, 8000)}`)
+}
+
+function loginForm(page: Page): Locator {
+  return page.locator('form[ng-submit="authenticatePassword()"]')
 }
 
 function dashboardLocator(page: Page): Locator {
@@ -33,7 +36,8 @@ function dashboardLocator(page: Page): Locator {
 
 export async function login(page: Page) {
   await page.goto('/')
-  const username = page.locator('#user')
+  const form = loginForm(page)
+  const username = form.locator('#user')
 
   try {
     await expect(username.or(dashboardLocator(page)).first()).toBeVisible()
@@ -44,8 +48,8 @@ export async function login(page: Page) {
 
   if (await username.isVisible()) {
     await username.fill(user)
-    await page.locator('#password').fill(password)
-    await page.locator('#submit').click()
+    await form.locator('#password').fill(password)
+    await form.locator('#submit').click()
   }
   await expectAtDashboard(page)
 }
