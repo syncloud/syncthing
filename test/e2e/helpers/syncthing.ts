@@ -19,7 +19,7 @@ async function dump(page: Page, label: string) {
         }
       }, path)
       .catch((err) => `evaluate failed: ${String(err)}`)
-    console.log(`[${label}] ${path} -> ${result}`)
+    console.log(`[${label}] ${path} (no csrf header) -> ${result}`)
   }
   console.log(`[${label}] login form count=${await loginForm(page).count()}`)
   const html = await page.content().catch(() => '')
@@ -69,19 +69,29 @@ function settingsModal(page: Page): Locator {
 
 export async function openSettings(page: Page) {
   const deviceName = page.locator('#DeviceName')
-  if (await deviceName.isVisible().catch(() => false)) {
-    return
+  const actions = page
+    .locator('li.action-menu')
+    .filter({ has: page.locator('a[ng-click="showSettings()"]') })
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (await deviceName.isVisible().catch(() => false)) {
+      return
+    }
+    const toggle = actions.locator('a.dropdown-toggle')
+    const item = actions.locator('a[ng-click="showSettings()"]')
+    try {
+      await toggle.click()
+      await expect(item).toBeVisible({ timeout: 5_000 })
+      await item.click()
+      await expect(deviceName).toBeVisible({ timeout: 10_000 })
+      return
+    } catch {
+      await page.keyboard.press('Escape').catch(() => undefined)
+    }
   }
-  const settingsLink = page.locator('a[ng-click="showSettings()"]')
-  const actions = page.locator('li.action-menu').filter({ has: settingsLink })
-  try {
-    await actions.locator('a.dropdown-toggle').click()
-    await actions.locator('a[ng-click="showSettings()"]').click()
-    await expect(deviceName).toBeVisible()
-  } catch (e) {
-    await dump(page, 'settings-not-reachable')
-    throw e
-  }
+
+  await dump(page, 'settings-not-reachable')
+  throw new Error('settings modal did not open after 3 attempts')
 }
 
 export async function setDeviceName(page: Page, name: string) {
