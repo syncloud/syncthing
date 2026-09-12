@@ -6,8 +6,6 @@ from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 from syncloudlib.http import wait_for_rest
 
-from settle import settle
-
 TMP_DIR = '/tmp/syncloud'
 HOME_DIR = '/var/snap/syncthing/current/config/syncthing'
 GUI_SOCKET = '/var/snap/syncthing/current/gui.sock'
@@ -65,7 +63,7 @@ def from_leveldb():
     return BEFORE['version'].startswith('v1.')
 
 
-def test_start(module_setup, app, device_host, domain, device):
+def test_start(module_setup, app, device_host, domain, device, settle):
     add_host_alias(app, device_host, domain)
     device.activated()
     settle(device)

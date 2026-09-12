@@ -4,8 +4,6 @@ from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.http import wait_for_rest
 
-from settle import settle
-
 TMP_DIR = '/tmp/syncloud'
 
 
@@ -20,7 +18,7 @@ def module_setup(request, device, artifact_dir):
     request.addfinalizer(module_teardown)
 
 
-def test_start(module_setup, app, device_host, domain, device):
+def test_start(module_setup, app, device_host, domain, device, settle):
     add_host_alias(app, device_host, domain)
     device.activated()
     settle(device)
