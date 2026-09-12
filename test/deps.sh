@@ -1,5 +1,5 @@
 #!/bin/bash -e
 
-apt-get update
-apt-get install -y sshpass openssh-client netcat rustc file libxml2-dev libxslt-dev build-essential libz-dev curl
-pip install -r requirements.txt
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+"${DIR}/../ci/apt.sh" sshpass openssh-client libxml2-dev libxslt-dev build-essential
+pip install -q -r "${DIR}/requirements.txt"

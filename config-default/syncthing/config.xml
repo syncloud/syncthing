@@ -41,7 +41,7 @@
         <line>/</line>
     </ignores>
     <gui enabled="true" tls="false" debugging="false">
-        <address>0.0.0.0:{{ syncthing_port }}</address>
+        <address>0.0.0.0:{{ .SyncthingPort }}</address>
         <apikey></apikey>
         <theme>default</theme>
         <authMode>ldap</authMode>

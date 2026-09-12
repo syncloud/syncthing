@@ -21,9 +21,8 @@ def module_setup(request, device, data_dir, platform_data_dir, app_dir, artifact
 
         device.run_ssh('mkdir {0}'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la {0} > {1}/app.data.ls.log'.format(data_dir, TMP_DIR), throw=False)
-        device.run_ssh('ls -la {0}/syncthing/config > {1}/config.ls.log'.format(data_dir, TMP_DIR), throw=False)
-        device.run_ssh('{0}/syncthing/syncthing --help > {1}/syncthing.help.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
-        device.run_ssh('{0}/syncthing/syncthing --version > {1}/syncthing.version.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
+        device.run_ssh('ls -la {0}/config/syncthing > {1}/config.ls.log'.format(snap_data_dir, TMP_DIR), throw=False)
+        device.run_ssh('{0}/syncthing --version > {1}/syncthing.version.log 2>&1'.format(app_dir, TMP_DIR), throw=False)
         device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR), throw=False)
         device.run_ssh('systemctl status snap.syncthing.syncthing > {0}/syncthing.status.log'.format(TMP_DIR), throw=False)
@@ -36,14 +35,12 @@ def module_setup(request, device, data_dir, platform_data_dir, app_dir, artifact
         device.run_ssh('ls -la /var/snap > {0}/var.snap.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /var/snap/syncthing > {0}/var.snap.syncthing.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /var/snap/syncthing/common > {0}/var.snap.syncthing.common.ls.log'.format(TMP_DIR), throw=False)
-        device.run_ssh('ls -la /var/snap/syncthing/common/config > {0}/var.snap.syncthing.common.config.ls.log'.format(TMP_DIR), throw=False)
-        device.run_ssh('ls -la /var/snap/syncthing/common/config/syncthing > {0}/var.snap.syncthing.common.config.syncthing.ls.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('ls -la /var/snap/syncthing/current/config/syncthing > {0}/home.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /data > {0}/data.ls.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ls -la /data/syncthing > {0}/data.syncthing.ls.log'.format(TMP_DIR), throw=False)
 
         app_log_dir = join(artifact_dir, 'log')
         os.mkdir(app_log_dir)
-        device.scp_from_device('{0}/log/*.log'.format(data_dir), app_log_dir, throw=False)
         device.scp_from_device('{0}/*.log'.format(TMP_DIR), app_log_dir, throw=False)
         check_output('chmod -R a+r {0}'.format(artifact_dir), shell=True)
 

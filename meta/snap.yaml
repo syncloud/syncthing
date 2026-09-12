@@ -1,27 +1,40 @@
+name: syncthing
+summary: Syncthing
+description: Continuous File Synchronization
+grade: stable
+
 apps:
   syncthing:
     command: bin/service.syncthing.sh start
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
+    restart-delay: 10s
     start-timeout: 600s
     before: [nginx]
-  
+
   nginx:
-    command: bin/service.nginx.sh
     user: syncthing
-    daemon: forking
-    plugs:
-    - network
-    - network-bind
+    command: bin/service.nginx.sh
+    daemon: simple
     restart-condition: always
+    restart-delay: 10s
     start-timeout: 600s
     after: [syncthing]
 
-confinement: strict
-description: Continuous File Synchronization
-grade: stable
-name: syncthing
-summary: Syncthing
+  cli:
+    command: bin/cli
+
+  storage-change:
+    command: bin/cli storage-change
+
+  access-change:
+    command: bin/cli access-change
+
+  backup-pre-stop:
+    command: bin/cli backup-pre-stop
+
+  restore-pre-start:
+    command: bin/cli restore-pre-start
+
+  restore-post-start:
+    command: bin/cli restore-post-start
