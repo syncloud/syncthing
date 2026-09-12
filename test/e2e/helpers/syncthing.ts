@@ -3,11 +3,28 @@ import { Page, Locator, expect } from '@playwright/test'
 const user = process.env.PLAYWRIGHT_DEVICE_USER ?? 'user'
 const password = process.env.PLAYWRIGHT_DEVICE_PASSWORD ?? 'Password1'
 
+const probePaths = ['/rest/noauth/health', '/rest/svc/lang', '/rest/system/status', '/rest/system/config']
+
 async function dump(page: Page, label: string) {
   console.log(`[${label}] url=${page.url()}`)
   console.log(`[${label}] title=${await page.title().catch(() => '?')}`)
+  for (const path of probePaths) {
+    const result = await page
+      .evaluate(async (p) => {
+        try {
+          const r = await fetch(p, { credentials: 'same-origin' })
+          return `${r.status} ${(await r.text()).slice(0, 200)}`
+        } catch (err) {
+          return `fetch error: ${String(err)}`
+        }
+      }, path)
+      .catch((err) => `evaluate failed: ${String(err)}`)
+    console.log(`[${label}] ${path} -> ${result}`)
+  }
+  console.log(`[${label}] #user count=${await page.locator('#user').count()}`)
+  console.log(`[${label}] #submit count=${await page.locator('#submit').count()}`)
   const html = await page.content().catch(() => '')
-  console.log(`[${label}] html=\n${html.slice(0, 3000)}`)
+  console.log(`[${label}] html=\n${html.slice(0, 8000)}`)
 }
 
 export async function login(page: Page) {
