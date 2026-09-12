@@ -2,6 +2,7 @@ local name = 'syncthing';
 local version = '2.1.5';
 
 local go = '1.24';
+local nginx = '1.29.3-alpine3.22';
 local debian = 'bookworm-slim';
 local python = '3.12-slim-bookworm';
 local platform = '26.08.01';
@@ -26,7 +27,7 @@ local build(arch, test_ui) = [{
   steps: [
     {
       name: 'nginx',
-      image: 'debian:' + debian,
+      image: 'nginx:' + nginx,
       commands: ['./nginx/build.sh'],
     },
   ] + [

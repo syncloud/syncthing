@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/sh -ex
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
-${DIR}/../build/snap/nginx/sbin/nginx -version
+${DIR}/../build/snap/nginx/bin/nginx.sh -version

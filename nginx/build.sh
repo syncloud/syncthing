@@ -1,13 +1,12 @@
-#!/bin/bash -xe
+#!/bin/sh -ex
 
 DIR=$( cd "$( dirname "$0" )" && pwd )
-ARCH=$(uname -m)
-BUILD_DIR=${DIR}/../build/snap
+cd ${DIR}
 
-${DIR}/../ci/apt.sh wget ca-certificates
-
+BUILD_DIR=${DIR}/../build/snap/nginx
 mkdir -p ${BUILD_DIR}
-cd ${BUILD_DIR}
-${DIR}/../ci/download.sh https://github.com/syncloud/3rdparty/releases/download/nginx/nginx-${ARCH}.tar.gz nginx.tar.gz
-tar xf nginx.tar.gz
-rm -f nginx.tar.gz
+cp -r /etc ${BUILD_DIR}
+cp -r /usr ${BUILD_DIR}
+cp -r /bin ${BUILD_DIR}
+cp -r /lib ${BUILD_DIR}
+cp -r ${DIR}/bin/* ${BUILD_DIR}/bin
