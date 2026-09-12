@@ -13,6 +13,7 @@ apps:
     before: [nginx]
 
   nginx:
+    user: syncthing
     command: bin/service.nginx.sh
     daemon: simple
     restart-condition: always
