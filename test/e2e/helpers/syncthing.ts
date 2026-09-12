@@ -27,25 +27,32 @@ async function dump(page: Page, label: string) {
   console.log(`[${label}] html=\n${html.slice(0, 8000)}`)
 }
 
+function dashboardLocator(page: Page): Locator {
+  return page.getByRole('heading', { name: 'This Device' }).or(page.locator('#device-this'))
+}
+
 export async function login(page: Page) {
   await page.goto('/')
   const username = page.locator('#user')
-  if (await username.isVisible().catch(() => false)) {
+
+  try {
+    await expect(username.or(dashboardLocator(page)).first()).toBeVisible()
+  } catch (e) {
+    await dump(page, 'neither-login-nor-dashboard')
+    throw e
+  }
+
+  if (await username.isVisible()) {
     await username.fill(user)
     await page.locator('#password').fill(password)
     await page.locator('#submit').click()
-  } else {
-    await dump(page, 'no-login-form')
   }
   await expectAtDashboard(page)
 }
 
 export async function expectAtDashboard(page: Page) {
-  const dashboard = page
-    .getByRole('heading', { name: 'This Device' })
-    .or(page.locator('#device-this'))
   try {
-    await expect(dashboard.first()).toBeVisible()
+    await expect(dashboardLocator(page).first()).toBeVisible()
   } catch (e) {
     await dump(page, 'dashboard-not-found')
     throw e
