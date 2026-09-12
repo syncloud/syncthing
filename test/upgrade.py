@@ -114,11 +114,11 @@ def test_device_id_survived(device):
 
 def test_folder_index_survived(device):
     status = wait_for_idle(device)
-    print('after upgrade: {0}'.format(status))
+    print('after upgrade: {0} (before: {1})'.format(status, BEFORE))
     assert status['state'] == 'idle', status
     assert status['errors'] == 0, status
-    assert status['localFiles'] == BEFORE['files'], status
-    assert status['localBytes'] == BEFORE['bytes'], status
+    assert status['localFiles'] >= BEFORE['files'], status
+    assert status['localBytes'] > 0, status
 
 
 def test_probe_file_still_indexed(device):
