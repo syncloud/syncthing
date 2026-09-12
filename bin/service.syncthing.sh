@@ -10,7 +10,7 @@ fi
 case $1 in
 start)
     sysctl -w fs.inotify.max_user_watches=204800
-    exec ${DIR}/syncthing -home /var/snap/syncthing/current/config/syncthing
+    exec ${DIR}/syncthing --home /var/snap/syncthing/current/config/syncthing serve
     ;;
 *)
     echo "not valid command"

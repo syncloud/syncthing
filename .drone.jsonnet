@@ -1,5 +1,5 @@
 local name = "syncthing";
-local version = "1.29.5";
+local version = "2.1.5";
 
 local browser = "firefox";
 local selenium = '4.21.0-20240517';
