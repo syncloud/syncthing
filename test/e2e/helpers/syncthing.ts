@@ -3,6 +3,13 @@ import { Page, Locator, expect } from '@playwright/test'
 const user = process.env.PLAYWRIGHT_DEVICE_USER ?? 'user'
 const password = process.env.PLAYWRIGHT_DEVICE_PASSWORD ?? 'Password1'
 
+async function dump(page: Page, label: string) {
+  console.log(`[${label}] url=${page.url()}`)
+  console.log(`[${label}] title=${await page.title().catch(() => '?')}`)
+  const html = await page.content().catch(() => '')
+  console.log(`[${label}] html=\n${html.slice(0, 3000)}`)
+}
+
 export async function login(page: Page) {
   await page.goto('/')
   const username = page.locator('#user')
@@ -10,12 +17,22 @@ export async function login(page: Page) {
     await username.fill(user)
     await page.locator('#password').fill(password)
     await page.locator('#submit').click()
+  } else {
+    await dump(page, 'no-login-form')
   }
   await expectAtDashboard(page)
 }
 
 export async function expectAtDashboard(page: Page) {
-  await expect(page.locator('#device-this')).toBeVisible()
+  const dashboard = page
+    .getByRole('heading', { name: 'This Device' })
+    .or(page.locator('#device-this'))
+  try {
+    await expect(dashboard.first()).toBeVisible()
+  } catch (e) {
+    await dump(page, 'dashboard-not-found')
+    throw e
+  }
 }
 
 function settingsModal(page: Page): Locator {
@@ -27,9 +44,14 @@ export async function openSettings(page: Page) {
   if (await deviceName.isVisible().catch(() => false)) {
     return
   }
-  await page.locator('.action-menu > a.dropdown-toggle').click()
-  await page.locator('.action-menu .dropdown-menu').getByText('Settings', { exact: true }).click()
-  await expect(deviceName).toBeVisible()
+  try {
+    await page.locator('.action-menu > a.dropdown-toggle').click()
+    await page.locator('.action-menu .dropdown-menu').getByText('Settings', { exact: true }).click()
+    await expect(deviceName).toBeVisible()
+  } catch (e) {
+    await dump(page, 'settings-not-reachable')
+    throw e
+  }
 }
 
 export async function setDeviceName(page: Page, name: string) {
