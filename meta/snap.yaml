@@ -5,6 +5,7 @@ grade: stable
 
 apps:
   syncthing:
+    user: syncthing
     command: bin/service.syncthing.sh
     daemon: simple
     restart-condition: always

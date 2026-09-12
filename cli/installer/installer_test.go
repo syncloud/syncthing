@@ -17,11 +17,11 @@ func TestDefaultConfigLandsInHomeDir(t *testing.T) {
 	if err := os.MkdirAll(defaults, 0755); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(path.Join(defaults, "config.xml"), []byte("port {{ .SyncthingPort }}"), 0644); err != nil {
+	if err := os.WriteFile(path.Join(defaults, "config.xml"), []byte("socket {{ .GuiSocket }}"), 0644); err != nil {
 		t.Fatal(err)
 	}
 
-	err := config.Generate(path.Join(appDir, "config-default"), configDir, Variables{SyncthingPort: SyncthingPort})
+	err := config.Generate(path.Join(appDir, "config-default"), configDir, Variables{GuiSocket: "/var/snap/syncthing/current/gui.sock"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,7 +31,7 @@ func TestDefaultConfigLandsInHomeDir(t *testing.T) {
 	if err != nil {
 		t.Fatalf("expected %s: %v", generated, err)
 	}
-	if string(body) != "port 1085" {
+	if string(body) != "socket /var/snap/syncthing/current/gui.sock" {
 		t.Fatalf("got %q", body)
 	}
 }

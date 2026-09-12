@@ -10,6 +10,7 @@ from settle import settle
 
 TMP_DIR = '/tmp/syncloud'
 HOME_DIR = '/var/snap/syncthing/current/config/syncthing'
+GUI_SOCKET = '/var/snap/syncthing/current/gui.sock'
 FOLDER_ID = 'data'
 PROBE_DIR = 'syncthing/upgrade-probe'
 PROBE_FILE = PROBE_DIR + '/probe.txt'
@@ -35,10 +36,20 @@ def api_key(device):
     return config[start:config.index('</apikey>')].strip()
 
 
+def curl_target(device):
+    if 'missing' in device.run_ssh('[ -S {0} ] && echo present || echo missing'.format(GUI_SOCKET)):
+        return '', 'http://localhost:1085'
+    return '--unix-socket {0}'.format(GUI_SOCKET), 'http://localhost'
+
+
+def curl(device, path, method=''):
+    socket_arg, base = curl_target(device)
+    return device.run_ssh('curl -s {0} {1} -H X-API-Key:{2} {3}/rest/{4}'.format(
+        method, socket_arg, api_key(device), base, path))
+
+
 def api(device, path):
-    out = device.run_ssh(
-        'curl -s -H X-API-Key:{0} http://localhost:1085/rest/{1}'.format(api_key(device), path))
-    return json.loads(out)
+    return json.loads(curl(device, path))
 
 
 def wait_for_idle(device):
@@ -65,9 +76,7 @@ def test_pre_upgrade_write_probe(device):
     device.run_ssh('mkdir -p /data/{0}'.format(PROBE_DIR))
     device.run_ssh('echo {0} > /data/{1}'.format(PROBE_BODY, PROBE_FILE))
     device.run_ssh('head -c 1048576 /dev/urandom > /data/{0}/probe.bin'.format(PROBE_DIR))
-    device.run_ssh(
-        'curl -s -X POST -H X-API-Key:{0} http://localhost:1085/rest/db/scan?folder={1}'.format(
-            api_key(device), FOLDER_ID))
+    curl(device, 'db/scan?folder={0}'.format(FOLDER_ID), method='-X POST')
 
     status = wait_for_idle(device)
     assert status['localFiles'] > 0, status
