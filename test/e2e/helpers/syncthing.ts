@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test'
+import { Page, Locator, expect } from '@playwright/test'
 
 const user = process.env.PLAYWRIGHT_DEVICE_USER ?? 'user'
 const password = process.env.PLAYWRIGHT_DEVICE_PASSWORD ?? 'Password1'
@@ -18,17 +18,25 @@ export async function expectAtDashboard(page: Page) {
   await expect(page.locator('#device-this')).toBeVisible()
 }
 
+function settingsModal(page: Page): Locator {
+  return page.locator('.modal', { has: page.locator('#DeviceName') })
+}
+
 export async function openSettings(page: Page) {
+  const deviceName = page.locator('#DeviceName')
+  if (await deviceName.isVisible().catch(() => false)) {
+    return
+  }
   await page.locator('.action-menu > a.dropdown-toggle').click()
   await page.locator('.action-menu .dropdown-menu').getByText('Settings', { exact: true }).click()
-  await expect(page.locator('#DeviceName')).toBeVisible()
+  await expect(deviceName).toBeVisible()
 }
 
 export async function setDeviceName(page: Page, name: string) {
   await openSettings(page)
   await page.locator('#DeviceName').fill(name)
-  await page.locator('#settings .modal-footer button.btn-primary').click()
-  await expect(page.locator('#settings')).toBeHidden()
+  await settingsModal(page).locator('.modal-footer button.btn-primary').click()
+  await expect(page.locator('#DeviceName')).toBeHidden()
 }
 
 export async function expectDeviceName(page: Page, name: string) {
