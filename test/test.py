@@ -7,6 +7,8 @@ import requests
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
+from settle import settle
+
 DIR = dirname(__file__)
 TMP_DIR = '/tmp/syncloud'
 
@@ -60,6 +62,7 @@ def syncthing_session(app_domain, device_user, device_password):
 def test_start(module_setup, device, device_host, app, domain):
     add_host_alias(app, device_host, domain)
     device.run_ssh('date', retries=100, throw=True)
+    settle(device)
 
 
 def test_activate_device(device):
