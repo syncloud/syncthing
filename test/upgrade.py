@@ -42,7 +42,7 @@ def curl_target(device):
 
 def curl(device, path, method=''):
     socket_arg, base = curl_target(device)
-    return device.run_ssh('curl -s {0} {1} -H X-API-Key:{2} {3}/rest/{4}'.format(
+    return device.run_ssh("curl -s {0} {1} -H X-API-Key:{2} '{3}/rest/{4}'".format(
         method, socket_arg, api_key(device), base, path))
 
 
