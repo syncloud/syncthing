@@ -72,9 +72,11 @@ export async function openSettings(page: Page) {
   if (await deviceName.isVisible().catch(() => false)) {
     return
   }
+  const settingsLink = page.locator('a[ng-click="showSettings()"]')
+  const actions = page.locator('li.action-menu').filter({ has: settingsLink })
   try {
-    await page.locator('.action-menu > a.dropdown-toggle').click()
-    await page.locator('.action-menu .dropdown-menu').getByText('Settings', { exact: true }).click()
+    await actions.locator('a.dropdown-toggle').click()
+    await actions.locator('a[ng-click="showSettings()"]').click()
     await expect(deviceName).toBeVisible()
   } catch (e) {
     await dump(page, 'settings-not-reachable')
