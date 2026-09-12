@@ -3,6 +3,8 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )
 SOCKET=${SNAP_DATA}/gui.sock
 
+/bin/rm -f ${SOCKET}
+
 echo 204800 > /proc/sys/fs/inotify/max_user_watches || echo "cannot raise inotify watch limit" >&2
 
 (
