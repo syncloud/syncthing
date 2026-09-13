@@ -83,6 +83,22 @@ def test_resource(syncthing_session, app_domain):
     assert response.status_code == 200, response.text
 
 
+def test_starting_page_while_syncthing_is_not_listening(device, app_domain):
+    device.run_ssh('snap stop syncthing.syncthing')
+    device.run_ssh('rm -f /var/snap/syncthing/current/gui.sock')
+    device.run_ssh('snap restart syncthing.nginx')
+
+    try:
+        wait_for_rest(requests.session(), 'https://{0}'.format(app_domain), 503, 60)
+        response = requests.get('https://{0}'.format(app_domain), verify=False)
+        assert response.status_code == 503, response.text
+        assert 'Syncthing is starting' in response.text, response.text
+    finally:
+        device.run_ssh('snap start syncthing.syncthing')
+
+    wait_for_rest(requests.session(), 'https://{0}'.format(app_domain), 200, 100)
+
+
 def test_remove(device, app):
     response = device.app_remove(app)
     assert response.status_code == 200, response.text
