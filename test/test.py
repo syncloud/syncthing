@@ -1,4 +1,5 @@
 import os
+import time
 from os.path import dirname, join
 from subprocess import check_output
 
@@ -81,6 +82,21 @@ def test_install(app_archive_path, device_host, device_password, device_session,
 def test_resource(syncthing_session, app_domain):
     response = syncthing_session.get('https://{0}'.format(app_domain), verify=False)
     assert response.status_code == 200, response.text
+
+
+def test_gui_socket_stays_owned_by_syncthing(device, app_domain):
+    socket = '/var/snap/syncthing/current/gui.sock'
+    device.run_ssh('chown root:root {0} && chmod 0755 {0}'.format(socket))
+
+    owner = ''
+    for _ in range(30):
+        owner = device.run_ssh('stat -c %U {0}'.format(socket)).strip()
+        if owner == 'syncthing':
+            break
+        time.sleep(1)
+    assert owner == 'syncthing', owner
+
+    wait_for_rest(requests.session(), 'https://{0}'.format(app_domain), 200, 100)
 
 
 def test_starting_page_while_syncthing_is_not_listening(device, app_domain):
