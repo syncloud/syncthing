@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="15">
+<title>Syncthing is starting</title>
+<style>
+body { font-family: system-ui, sans-serif; max-width: 34rem; margin: 4rem auto; padding: 0 1rem; line-height: 1.6; }
+h1 { font-size: 1.4rem; }
+p { color: #444; }
+code { background: #f2f2f2; padding: 0.1rem 0.3rem; border-radius: 3px; }
+</style>
+</head>
+<body>
+<h1>Syncthing is starting</h1>
+<p>
+Syncthing 2 stores its index in a new database format and converts the old one
+the first time it runs. On a large library this takes a while &mdash; roughly a
+minute for every 50,000 files.
+</p>
+<p>
+Your files are not touched by the conversion and nothing is lost. This page
+reloads itself every 15 seconds and Syncthing appears as soon as the conversion
+finishes.
+</p>
+<p>
+Please do not restart the app while this page is shown. Restarting begins the
+conversion again from the start and makes the wait longer. Progress is logged to
+<code>journalctl -u snap.syncthing.syncthing</code>.
+</p>
+</body>
+</html>
