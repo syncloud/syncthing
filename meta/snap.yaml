@@ -2,11 +2,15 @@ name: syncthing
 summary: Syncthing
 description: Continuous File Synchronization
 grade: stable
+confinement: strict
 
 apps:
   syncthing:
     command: bin/service.syncthing.sh
     daemon: simple
+    plugs:
+    - network
+    - network-bind
     restart-condition: always
     restart-delay: 10s
     start-timeout: 600s
@@ -16,6 +20,9 @@ apps:
     user: syncthing
     command: bin/service.nginx.sh
     daemon: simple
+    plugs:
+    - network
+    - network-bind
     restart-condition: always
     restart-delay: 10s
     start-timeout: 600s
