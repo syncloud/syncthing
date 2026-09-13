@@ -18,6 +18,7 @@ mkdir -p ${SNAP_DIR}/bin ${SNAP_DIR}/meta
 cp -r ${DIR}/bin/. ${SNAP_DIR}/bin
 cp -r ${DIR}/config ${SNAP_DIR}
 cp -r ${DIR}/config-default ${SNAP_DIR}
+cp -r ${DIR}/www ${SNAP_DIR}
 cp -r ${DIR}/meta/. ${SNAP_DIR}/meta
 
 du -d10 -h $SNAP_DIR | sort -h | tail -50

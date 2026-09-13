@@ -1,10 +1,11 @@
 import json
+import time
+
 import pytest
 import requests
 from subprocess import check_output
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
-from syncloudlib.http import wait_for_rest
 
 TMP_DIR = '/tmp/syncloud'
 HOME_DIR = '/var/snap/syncthing/current/config/syncthing'
@@ -13,6 +14,7 @@ FOLDER_ID = 'data'
 PROBE_DIR = 'syncthing/upgrade-probe'
 PROBE_FILE = PROBE_DIR + '/probe.txt'
 PROBE_BODY = 'pre-upgrade-probe'
+NGINX_START_GRACE_SECONDS = 20
 BEFORE = {}
 
 
@@ -91,7 +93,21 @@ def test_pre_upgrade_write_probe(device):
 
 def test_upgrade(device_host, device_password, app_archive_path, app_domain):
     local_install(device_host, device_password, app_archive_path)
-    wait_for_rest(requests.session(), "https://{0}".format(app_domain), 200, 100)
+
+    session = requests.session()
+    started = time.time()
+    for _ in range(200):
+        try:
+            response = session.get('https://{0}'.format(app_domain), verify=False, allow_redirects=False)
+        except requests.exceptions.RequestException:
+            time.sleep(3)
+            continue
+        if response.status_code == 200:
+            return
+        if time.time() - started > NGINX_START_GRACE_SECONDS:
+            assert response.status_code != 502, response.text
+        time.sleep(3)
+    assert False, 'syncthing did not come back after the refresh'
 
 
 def test_sqlite_database_present(device):
